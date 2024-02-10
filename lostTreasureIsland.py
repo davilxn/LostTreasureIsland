@@ -2,8 +2,14 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 import random
+import math
 
-def createisland():
+def setSeed(): 
+    seed = 0
+    random.seed(seed)
+    np.random.seed(seed)
+
+def createisland(): #criando a "ilha"
     G=nx.Graph()
     nodes_to_add = {0,1,2,3,4,5,6,7,8,9,
                     10,11,12,13,14,15,16,
@@ -28,12 +34,46 @@ def createisland():
     plt.margins(0.2)
     return G
 
-seed = 0
-random.seed(seed)
-np.random.seed(seed)
+def inputInGraph(G):
+    possible_numbers = list(range(1,31))
+    G.nodes[0]['start'] = 'start'
+    G.nodes[31]['end'] = 'end'
+    n_numbers = 6
+    allNodes = list(range(0,32))
+    num_danger = random.sample(possible_numbers,n_numbers)
+    for element in num_danger:
+        possible_numbers.remove(element)
+        if(element%2==0):
+            G.nodes[element]['danger'] = 'DeathSand'
+        else:
+            G.nodes[element]['danger'] = 'DeathFlorest'
+    
+    num_checkpoints = random.sample(possible_numbers,3)
+    for element in num_checkpoints:
+        possible_numbers.remove(element)
+        G.nodes[element]['checkpoint'] = 'checkpoint'
 
+    num_helps =random.sample(possible_numbers,n_numbers)
+    for element in num_helps:
+        possible_numbers.remove(element)
+        if(element%2==0):
+            G.nodes[element]['help'] = 'findLife'
+        else:
+            G.nodes[element]['help'] = 'findWeapon'
+    
+    for element in possible_numbers:
+         G.nodes[element]['event'] = 'none'
+    
+    # Apenas para verificar se a caracteristica foi adicionada
+    for element in allNodes: 
+        print(element)
+        print(G.nodes[element])
+
+setSeed()
 G = createisland()
+inputInGraph(G)
 plt.show()
+
 
 
 
