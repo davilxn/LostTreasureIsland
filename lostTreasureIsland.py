@@ -4,6 +4,82 @@ import numpy as np
 import random
 import math
 
+
+class Creature:
+    def __init__(self, name, life, atack, local):
+        self.name = name
+        self.life = life
+        self.atack = atack
+        self.local = local
+
+    def moveFor(self, local):
+        self.local = local
+    
+    def atackCreature(self, creature):
+        creature.life = creature.life - self.atack
+
+        if creature.life <=0:
+            return True
+
+        return False
+    
+class Weapon:
+    def __init__(self,name,atackPts,use,local):
+        self.name = name
+        self.atackPts= atackPts
+        self.use = use
+        self.local
+    
+    def brokeWeapon(self):
+        if(self.use == 0 ):
+            self.atackPts = 0
+            return True
+        else:
+            return False
+
+
+class LifeFruit:
+    def __init__(self, name,lifePts,local):
+        self.name = name
+        self.lifePts = lifePts
+        self.local
+          
+
+class Player(Creature):
+    def __init__(self,name,life,atack,local):
+        super().__init__(self,name,life,atack,local)
+        self.inventory[None,None,None]
+        self.weaponPoints = 0
+        self.numInventory = 0
+    
+    def takeWeapon(self,weapon):
+        if(self.numInventory <=2):
+            self.inventory.append(weapon)
+            self.numInventory = self.numInventory + 1
+            self.atack = self.atack + weapon.atackPts
+            self.weaponPoints = self.weaponPoints + weapon.atackPts
+        else:
+            print("inventario cheio")
+
+    def dropWeapon(self,weapon):
+        self.weaponPoints = self.weaponPoints - weapon.atackPts
+        self.atack = self.atack - weapon.atackPts
+        self.inventory.remove(weapon)
+
+
+    def takeLifeFruit(self,fruit):
+        if self.numInventory <=2:
+            self.inventory.append(fruit)
+            self.numInventory = self.numInventory + 1
+        else:
+            print("inventario cheio")
+    
+    def useLifeFruit(self,fruit):
+        self.life = self.life + fruit.lifePts
+        self.inventory.remove(fruit)
+
+        
+
 def setSeed(): 
     seed = 0
     random.seed(seed)
@@ -40,6 +116,7 @@ def inputInGraph(G):
     G.nodes[31]['end'] = 'end'
     n_numbers = 6
     allNodes = list(range(0,32))
+    
     num_danger = random.sample(possible_numbers,n_numbers)
     for element in num_danger:
         possible_numbers.remove(element)
@@ -57,7 +134,7 @@ def inputInGraph(G):
     for element in num_helps:
         possible_numbers.remove(element)
         if(element%2==0):
-            G.nodes[element]['help'] = 'findLife'
+            G.nodes[element]['help'] = 'findLifeFruit'
         else:
             G.nodes[element]['help'] = 'findWeapon'
     
@@ -65,9 +142,8 @@ def inputInGraph(G):
          G.nodes[element]['event'] = 'none'
     
     # Apenas para verificar se a caracteristica foi adicionada
-    for element in allNodes: 
-        print(element)
-        print(G.nodes[element])
+    for nodes in G.nodes(data=True): 
+        print(nodes)
 
 setSeed()
 G = createisland()
