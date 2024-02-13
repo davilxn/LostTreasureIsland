@@ -6,11 +6,12 @@ import math
 
 
 class Creature:
-    def __init__(self, name, life, atack, local):
+    def __init__(self, name, life, atack, local,bornLocal):
         self.name = name
         self.life = life
         self.atack = atack
         self.local = local
+        self.bornLocal = bornLocal
 
     def moveFor(self, local):
         self.local = local
@@ -28,7 +29,7 @@ class Weapon:
         self.name = name
         self.atackPts= atackPts
         self.use = use
-        self.local
+        self.local = local
     
     def brokeWeapon(self):
         if(self.use == 0 ):
@@ -46,8 +47,8 @@ class LifeFruit:
           
 
 class Player(Creature):
-    def __init__(self,name,life,atack,local):
-        super().__init__(self,name,life,atack,local)
+    def __init__(self,name,life,atack,local,bornLocal):
+        super().__init__(self,name,life,atack,local,bornLocal)
         self.inventory[None,None,None]
         self.weaponPoints = 0
         self.numInventory = 0
