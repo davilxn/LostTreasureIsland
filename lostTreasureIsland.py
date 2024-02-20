@@ -107,8 +107,8 @@ def createisland(): #criando a "ilha"
     
     G.add_edges_from(edges_to_add)
     
-    nx.draw(G,node_color="lightblue",node_size=200,with_labels=True,font_size=10,font_family="Times New Roman",font_weight="bold",width=1.5)
-    plt.margins(0.2)
+    #nx.draw(G,node_color="lightblue",node_size=200,with_labels=True,font_size=10,font_family="Times New Roman",font_weight="bold",width=1.5)
+    #plt.margins(0.2)
     return G
 
 def inputInGraph(G):
@@ -145,6 +145,8 @@ def inputInGraph(G):
     # Apenas para verificar se a caracteristica foi adicionada
     for nodes in G.nodes(data=True): 
         print(nodes)
+    
+    return G
 
 setSeed()
 G = createisland()
