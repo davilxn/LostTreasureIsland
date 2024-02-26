@@ -171,7 +171,7 @@ caminho = random.choice(list(nx.all_simple_paths(G,)))
 if G.nodes[0]['evento'] == 'praia':
     print('deu certo adiconar caracteriscas ao nó')
 
-plt.show()
+# plt.show()
 
 
 
