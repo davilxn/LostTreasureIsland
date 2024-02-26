@@ -113,34 +113,39 @@ def createisland(): #criando a "ilha"
 
 def inputInGraph(G):
     possible_numbers = list(range(1,31))
-    G.nodes[0]['start'] = 'start'
-    G.nodes[31]['end'] = 'end'
+    G.nodes[0]['evento'] = 'praia'
+    G.nodes[31]['evento'] = 'tesouro'
+    i = 0
     n_numbers = 6
     allNodes = list(range(0,32))
     
+    for node in allNodes:
+        G.nodes[node]['numero'] = node
+
     num_danger = random.sample(possible_numbers,n_numbers)
     for element in num_danger:
         possible_numbers.remove(element)
         if(element%2==0):
-            G.nodes[element]['danger'] = 'DeathSand'
+            G.nodes[element]['evento'] = 'areiaMovedica'
         else:
-            G.nodes[element]['danger'] = 'DeathFlorest'
+            G.nodes[element]['evento'] = 'florestaPerigosa'
     
     num_checkpoints = random.sample(possible_numbers,3)
     for element in num_checkpoints:
         possible_numbers.remove(element)
-        G.nodes[element]['checkpoint'] = 'checkpoint'
+        G.nodes[element]['evento'] = 'checkpoint'
 
     num_helps =random.sample(possible_numbers,n_numbers)
     for element in num_helps:
         possible_numbers.remove(element)
         if(element%2==0):
-            G.nodes[element]['help'] = 'findLifeFruit'
+            G.nodes[element]['evento'] = 'fruta'
         else:
-            G.nodes[element]['help'] = 'findWeapon'
+            G.nodes[element]['evento'] = 'arma'
     
     for element in possible_numbers:
-         G.nodes[element]['event'] = 'none'
+         G.nodes[element]['evento'] = 'none'
+    
     
     # Apenas para verificar se a caracteristica foi adicionada
     for nodes in G.nodes(data=True): 
@@ -148,9 +153,24 @@ def inputInGraph(G):
     
     return G
 
+
+def inputXY():
+    G.edges[0]["x"] = [230,239]
+    G.edges[0]["y"] = [479,447]
+
 setSeed()
 G = createisland()
 inputInGraph(G)
+
+comeco = G[0]
+termino = G[31]
+
+caminho = random.choice(list(nx.all_simple_paths(G,)))
+
+
+if G.nodes[0]['evento'] == 'praia':
+    print('deu certo adiconar caracteriscas ao nó')
+
 plt.show()
 
 
