@@ -20,7 +20,7 @@ grafo = li.inputInGraph(grafo)
 
 # Capitão Daleo
 capitao, anim_capitao, lista_anim_cap = inicializa_capitao(grafo)
-anim_capitao.definir_frames(lista_anim_cap[0])
+anim_capitao.definir_frames(lista_anim_cap[capitao.estado])
 
 # Música de fundo
 pg.mixer.music.load("sounds\8bit Bossa.mp3")
@@ -32,14 +32,22 @@ while executando:
     for evento in pg.event.get():
         if evento.type == pg.QUIT:
             executando = False
+        
+        elif evento.type == pg.MOUSEBUTTONDOWN:
+            capitao.mover()
             
-    # Lógica da animação
+    # Lógica da animação do Capitão
     anim_capitao.atualizar()
-    dest = (230-123, 333-123)
+    estado_anterior = capitao.estado
     
-    mover_em_linha_reta(capitao, dest)
+    destino = (capitao.grafo.nodes[capitao.vertice]['x']-123, capitao.grafo.nodes[capitao.vertice]['y']-123)
+    mover_em_linha_reta(capitao, destino)
+
+    if capitao.estado != estado_anterior:
+        anim_capitao.reiniciar_animacao()
+        
     anim_capitao.definir_frames(lista_anim_cap[capitao.estado])
-                
+    
     # Desenha o frame atual na tela
     tela.blit(imagem_fundo, (0, 0))
     tela.blit(anim_capitao.obter_frame_atual(), (capitao.x, capitao.y))

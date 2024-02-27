@@ -92,8 +92,8 @@ class Personagem:
         self.tesouro = 0
         self.pontos_ataque = pontos_ataque
         self.arma = None  
-        self.x = 244 - 123
-        self.y = 455 - 123
+        self.x = self.grafo.nodes[self.vertice]["x"] - 123
+        self.y = self.grafo.nodes[self.vertice]["y"] - 123
         self.estado = 0
     
     def mover(self):

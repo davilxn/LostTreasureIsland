@@ -28,6 +28,5 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
         personagem.estado = 1
     else:
         personagem.estado = 0
-        pass
     
     
