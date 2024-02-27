@@ -1,18 +1,5 @@
 import pygame as pg
 
-def carregar_frames(path_img, num_frames):
-    frames = pg.image.load(path_img)
-    largura_frame = frames.get_width() // num_frames
-    altura_frame = frames.get_height()
-    lista_frames = [frames.subsurface((i * largura_frame, 0, largura_frame, altura_frame)) for i in range(num_frames)]
-    return lista_frames
-
-def calc_distancia(xf, yf, xi, yi):
-    difx = xf - xi
-    dify = yf - yi
-    dist = ((difx**2) + (dify**2))**0.5
-    return dist
-
 class Animacao:
     def __init__(self, frames=[], fps=10):
         self.frames = frames
