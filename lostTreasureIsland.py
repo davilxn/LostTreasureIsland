@@ -151,16 +151,81 @@ def inputInGraph(G):
     for nodes in G.nodes(data=True): 
         print(nodes)
     
+    inputXY(G)
+
     return G
 
 
-def inputXY():
-    G.edges[0]["x"] = [230,239]
-    G.edges[0]["y"] = [479,447]
+def inputXY(G):
+    G.nodes[0]["x"] = 131
+    G.nodes[0]["y"] = 542
+    G.nodes[1]["x"] = 244
+    G.nodes[1]["y"] = 455
+    G.nodes[2]["x"] = 455
+    G.nodes[2]["y"] = 467
+    G.nodes[3]["x"] = 476
+    G.nodes[3]["y"] = 574
+    G.nodes[4]["x"] = 599
+    G.nodes[4]["y"] = 434
+    G.nodes[5]["x"] = 230
+    G.nodes[5]["y"] = 333
+    G.nodes[6]["x"] = 393
+    G.nodes[6]["y"] = 351
+    G.nodes[7]["x"] = 660
+    G.nodes[7]["y"] = 349
+    G.nodes[8]["x"] = 627
+    G.nodes[8]["y"] = 494
+    G.nodes[9]["x"] = 689
+    G.nodes[9]["y"] = 538
+    G.nodes[10]["x"] = 251
+    G.nodes[10]["y"] = 245
+    G.nodes[11]["x"] = 391
+    G.nodes[11]["y"] = 252
+    G.nodes[12]["x"] = 511
+    G.nodes[12]["y"] = 282
+    G.nodes[13]["x"] = 767
+    G.nodes[13]["y"] = 366
+    G.nodes[14]["x"] = 833
+    G.nodes[14]["y"] = 335
+    G.nodes[15]["x"] = 886
+    G.nodes[15]["y"] = 557
+    G.nodes[16]["x"] = 1072
+    G.nodes[16]["y"] = 380
+    G.nodes[17]["x"] = 330
+    G.nodes[17]["y"] = 175
+    G.nodes[18]["x"] = 394
+    G.nodes[18]["y"] = 129
+    G.nodes[19]["x"] = 549
+    G.nodes[19]["y"] = 195
+    G.nodes[20]["x"] = 625
+    G.nodes[20]["y"] = 263
+    G.nodes[21]["x"] = 731
+    G.nodes[21]["y"] = 251
+    G.nodes[22]["x"] = 893
+    G.nodes[22]["y"] = 301
+    G.nodes[23]["x"] = 974
+    G.nodes[23]["y"] = 308
+    G.nodes[24]["x"] = 291
+    G.nodes[24]["y"] = 109
+    G.nodes[25]["x"] = 193
+    G.nodes[25]["y"] = 78
+    G.nodes[26]["x"] = 1028
+    G.nodes[26]["y"] = 257
+    G.nodes[27]["x"] = 1037
+    G.nodes[27]["y"] = 139
+    G.nodes[28]["x"] = 924
+    G.nodes[28]["y"] = 99
+    G.nodes[29]["x"] = 782
+    G.nodes[29]["y"] = 111
+    G.nodes[30]["x"] = 653
+    G.nodes[30]["y"] = 203
+    G.nodes[31]["x"] = 776
+    G.nodes[31]["y"] = 165
 
 setSeed()
 G = createisland()
 inputInGraph(G)
+
 
 comeco = G[0]
 termino = G[31]
