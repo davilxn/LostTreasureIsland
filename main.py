@@ -1,8 +1,7 @@
 import pygame as pg
 import lostTreasureIsland as li
-from utils import mover_em_linha_reta, calcular_distancia
+from utils import mover_em_linha_reta
 from personagem import inicializa_capitao
-import json 
 
 import networkx as nx
 
@@ -12,7 +11,7 @@ largura, altura = (1200, 700)
 tela = pg.display.set_mode((largura, altura))
 pg.display.set_caption("Lost Treasure Island")
 imagem_fundo = pg.image.load("images\PNG map.jpg")
-#imagem_fundo = pg.transform.scale(imagem_fundo, (largura, altura))
+
 
 # O grafo
 grafo = li.createisland()
@@ -60,6 +59,4 @@ pg.quit()
 
 ### Área de comentários e observações
 # OBS. Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens.
-# Falar sobre uso dos vértices para a movimentação do Capitão.
-# Organizar os vértices do grafo na tela do PyGame.
 # Criar vários objetos do tipo Arma e PlantaMedicinal e espalhar pelos grafos. Como adicionar itens dentro de um vértice.

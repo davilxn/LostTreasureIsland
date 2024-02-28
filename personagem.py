@@ -1,22 +1,5 @@
-from animacoes import Animacao
-from utils import carregar_frames
-from random import randint, sample, choice
+from random import randint, choice
 import networkx as nx
-
-def inicializa_capitao(grafo):
-    capitao = Personagem(grafo=grafo)
-    arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", capitao.vertice, 10)
-    anim_capitao = Animacao()
-    capitao.arma = arma_inicial
-    capitao_idle = carregar_frames("images\Idle-5frm.png", 5)
-    capitao_caminha = carregar_frames("images\Run-6frm.png", 6)
-    capitao_ataca = carregar_frames("images\Atk1-6frm.png", 6)
-    capitao_dano = carregar_frames("images\Hit-3frm.png", 3)
-    capitao_morre = carregar_frames("images\Death-4frm.png", 4)
-    capitao_saca = carregar_frames("images\Gun-Out-6frm.png", 6)
-    capitao_guarda = carregar_frames("images\Gun-in-5frm.png", 5)
-    
-    return capitao, anim_capitao, [capitao_idle, capitao_caminha, capitao_ataca, capitao_dano, capitao_morre, capitao_saca, capitao_guarda]
 
 class PlantaMedicial:
     def __init__(self, nome, descricao, vertice, pontos_vida=25):
@@ -97,7 +80,6 @@ class Personagem:
         self.estado = 0
     
     def mover(self):
-        # A ser implementada
         self.ind_caminho += 1
         self.vertice = self.caminho[self.ind_caminho]
         self.alcançar_checkpoint()
