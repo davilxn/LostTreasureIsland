@@ -1,9 +1,8 @@
+from grafo import Grafo
 import pygame as pg
-import lostTreasureIsland as li
-from utils import mover_em_linha_reta
-from personagem import inicializa_capitao
+from utils import inicializa_grafo, mover_em_linha_reta
+from utils import inicializa_capitao
 
-import networkx as nx
 
 # Variáveis iniciais
 pg.init()
@@ -14,8 +13,8 @@ imagem_fundo = pg.image.load("images\PNG map.jpg")
 
 
 # O grafo
-grafo = li.createisland()
-grafo = li.inputInGraph(grafo)
+grafo = Grafo()
+inicializa_grafo(grafo,"./pontos.json")
 
 # Capitão Daleo
 capitao, anim_capitao, lista_anim_cap = inicializa_capitao(grafo)
@@ -39,7 +38,7 @@ while executando:
     anim_capitao.atualizar()
     estado_anterior = capitao.estado
     
-    destino = (capitao.grafo.nodes[capitao.vertice]['x']-123, capitao.grafo.nodes[capitao.vertice]['y']-123)
+    destino = (capitao.grafo.vertices[capitao.vertice].x-123, capitao.grafo.vertices[capitao.vertice].y-123)
     mover_em_linha_reta(capitao, destino)
 
     if capitao.estado != estado_anterior:

@@ -1,5 +1,4 @@
 from random import randint, choice
-import networkx as nx
 
 class PlantaMedicial:
     def __init__(self, nome, descricao, vertice, pontos_vida=25):
@@ -54,18 +53,18 @@ class Criatura:
         vertice_antigo = self.vertice
         vertices_proibidos = [vertice_antigo, 0, 31]
         
-        for vertice in self.grafo.nodes:
-            if self.grafo.nodes[self.vertice]['evento'] == 'checkpoint':
+        for vertice in self.grafo.vertices:
+            if self.grafo.vertices[self.vertice].evento == 'checkpoint':
                 vertices_proibidos.append(vertice)
                 
-        vertices_disponiveis = [v for v in self.grafo.nodes if v not in vertices_proibidos]
+        vertices_disponiveis = [v for v in self.grafo.vertices if v not in vertices_proibidos]
         vertice_novo = choice(vertices_disponiveis)
         self.mover(vertice_novo)
 
 class Personagem:
     def __init__(self, grafo, pontos_vida=100, pontos_ataque=10):
         self.grafo = grafo
-        self.caminho = choice(list(nx.all_simple_paths(self.grafo, 0, 31)))
+        self.caminho = self.grafo.dfs(0,31)
         self.ind_caminho = 0
         self.vertice = self.caminho[0]
         self.checkpoint_atual = 0
@@ -75,8 +74,8 @@ class Personagem:
         self.tesouro = 0
         self.pontos_ataque = pontos_ataque
         self.arma = None  
-        self.x = self.grafo.nodes[self.vertice]["x"] - 123
-        self.y = self.grafo.nodes[self.vertice]["y"] - 123
+        self.x = self.grafo.vertices[self.vertice].x - 123
+        self.y = self.grafo.vertices[self.vertice].y - 123
         self.estado = 0
     
     def mover(self):
@@ -138,7 +137,7 @@ class Personagem:
         else:
             self.pontos_vida = self.pontos_vida_maximos
             self.vertice = self.checkpoint_atual
-            self.grafo.nodes[self.vertice]['evento'] = 'none'
+            self.grafo.vertices[self.vertice].evento = 'none'
             self.checkpoint_atual = 0
     
     def fim_de_jogo(self):
@@ -146,7 +145,7 @@ class Personagem:
         
     
     def alcançar_checkpoint(self):
-        if self.grafo.nodes[self.vertice]['evento'] == 'checkpoint':
+        if self.grafo.vertices[self.vertice].evento == 'checkpoint':
             self.checkpoint_atual = self.vertice
 
 # OBS
