@@ -21,6 +21,8 @@ class Animacao:
     def reiniciar_animacao(self):
         self.indice_frame = 0
 
-    def definir_frames(self, novos_frames):
+    def definir_frames(self, novos_frames, est_atual, est_anterior):
+        if est_atual != est_anterior:
+            self.reiniciar_animacao()
         self.frames = novos_frames
         self.num_frames = len(self.frames)

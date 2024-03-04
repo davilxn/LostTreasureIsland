@@ -91,8 +91,9 @@ class Vertice:
     def __init__(self, vertice_id, x, y, marca=0, evento=None, grafo=None):
         self.grafo = grafo
         self.id = vertice_id
-        self.marca = 0
+        self.marca = marca
         self.evento = evento
+        self.objeto = None
         self.descricao = ''
         self.vizinhos = []
         self.x = x
@@ -100,6 +101,7 @@ class Vertice:
     
     def adicionar_vizinho(self, vertice):
         self.vizinhos.append(vertice)
+    
 
 
 

@@ -1,9 +1,9 @@
 import pygame as pg
 import numpy as np
-from random import sample
+from random import sample, choice
 import json
 from grafo import Vertice
-from personagem import Personagem, Arma
+from personagem import Personagem, Criatura, Arma
 from animacoes import Animacao
 
 # Grafo
@@ -36,7 +36,9 @@ def inputGrafo(grafo):
     vertices_possiveis = list(range(1,31))
     grafo.vertices[0].evento = "praia"
     grafo.vertices[31].evento = "tesouro"
-    n = 8
+    n = 6
+    
+    lista_monstros = inicializa_criaturas(grafo)
 
     perigo = sample(vertices_possiveis, n)
     for num in perigo:
@@ -58,6 +60,17 @@ def inputGrafo(grafo):
             grafo.vertices[num].evento = 'plantaMedicinal'
         else:
             grafo.vertices[num].evento = 'arma'
+    
+    num_monstros = sample(vertices_possiveis, n)
+    for num in num_monstros:
+        vertices_possiveis.remove(num)
+        grafo.vertices[num].evento = 'monstro'
+        
+        monstro = choice(lista_monstros)
+        monstro.vertice = grafo.vertices[num]
+        monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro.estado)
+        
+        grafo.vertices[num].objeto = monstro
     
     for num in vertices_possiveis:
          grafo.vertices[num].evento = 'nada'
@@ -95,7 +108,6 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
 def inicializa_capitao(grafo):
     capitao = Personagem(grafo=grafo)
     arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", capitao.vertice, 10)
-    anim_capitao = Animacao()
     capitao.arma = arma_inicial
     capitao_idle = carregar_frames("images\Idle-5frm.png", 5)
     capitao_caminha = carregar_frames("images\Run-6frm.png", 6)
@@ -105,7 +117,31 @@ def inicializa_capitao(grafo):
     capitao_saca = carregar_frames("images\Gun-Out-6frm.png", 6)
     capitao_guarda = carregar_frames("images\Gun-in-5frm.png", 5)
     
-    return capitao, anim_capitao, [capitao_idle, capitao_caminha, capitao_ataca, capitao_dano, capitao_morre, capitao_saca, capitao_guarda]
+    capitao.lista_anim = [capitao_idle, capitao_caminha, capitao_ataca, capitao_dano, capitao_morre, capitao_saca, capitao_guarda]
+    return capitao
+
+def inicializa_criatura(grafo, sprites):
+    monstro = Criatura(grafo=grafo)
+    monstro_idle = carregar_frames(sprites[0][0], sprites[0][1])
+    monstro_ataca = carregar_frames(sprites[0][0], sprites[0][1])
+    monstro_dano = carregar_frames(sprites[0][0], sprites[0][1])
+    monstro_morre = carregar_frames(sprites[0][0], sprites[0][1])
+    
+    monstro.lista_anim = [monstro_idle, monstro_ataca, monstro_dano, monstro_morre]
+    
+    return monstro
+
+def inicializa_criaturas(grafo):
+    sprites1 = [("images\dark fantasy big boss idle.png", 16), 
+               ("images\dark fantasy big boss attack 2.png", 16), 
+               ("images\dark fantasy big boss hit.png", 3), 
+               ("images\dark fantasy big boss death.png", 16)]
+    
+    
+    monstro1 = inicializa_criatura(grafo, sprites1)
+    monstros = [monstro1]
+    return monstros
+    
 
     
     

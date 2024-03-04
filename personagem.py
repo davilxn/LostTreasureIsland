@@ -1,4 +1,5 @@
 from random import randint, choice
+from animacoes import Animacao
 
 class PlantaMedicial:
     def __init__(self, nome, descricao, vertice, pontos_vida=25):
@@ -27,12 +28,15 @@ class Arma:
         return False
 
 class Criatura:
-    def __init__(self, grafo, vertice, pontos_vida=100, pontos_ataque=10):
+    def __init__(self, grafo, vertice=None, pontos_vida=100, pontos_ataque=10):
         self.grafo = grafo
         self.vertice = vertice
         self.pontos_vida = pontos_vida
         self.pontos_vida_maximos = pontos_vida
         self.pontos_ataque = pontos_ataque
+        self.estado = 0
+        self.animacao = Animacao()
+        self.lista_anim = []
     
     def mover(self, novo_vertice):
         self.vertice = novo_vertice
@@ -77,11 +81,13 @@ class Personagem:
         self.x = self.grafo.vertices[self.vertice].x - 123
         self.y = self.grafo.vertices[self.vertice].y - 123
         self.estado = 0
+        self.em_batalha = False
+        self.animacao = Animacao()
+        self.lista_anim = []
     
     def mover(self):
         self.ind_caminho += 1
         self.vertice = self.caminho[self.ind_caminho]
-        self.alcançar_checkpoint()
         self.arma.vertice = self.vertice
         pass
     
@@ -141,13 +147,19 @@ class Personagem:
             self.checkpoint_atual = 0
     
     def fim_de_jogo(self):
-        print("Fim de jogo")
+        print("Fim de jogo.")
+    
+    def interacao_vertice(self):
+        batalha, checkpoint, tesouro = False, False, False
+        if self.grafo.vertices[self.vertice].evento == 'checkpoint':
+            print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
+            self.checkpoint_atual = self.vertice
+        
+        elif self.grafo.vertices[self.vertice].evento == "monstro":
+            print("Você encontrou um montro sedendo por sangue e destruição!")
+            self.em_batalha = True
+        
+        elif self.grafo.vertices[self.vertice].evento == "tesouro":
+            print("Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio.")
         
     
-    def alcançar_checkpoint(self):
-        if self.grafo.vertices[self.vertice].evento == 'checkpoint':
-            self.checkpoint_atual = self.vertice
-
-# OBS
-    # self.lista_vertices =  list(self.grafo.nodes()) = list(self.grafo.nodes) que é uma lista dos indices dos vértices
-    # Para acessar um vértice a partir de um indice, faz-se self.grafo.nodes[indice] = self.grafo.nodes()[indice]
