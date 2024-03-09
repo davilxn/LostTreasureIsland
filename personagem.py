@@ -35,6 +35,8 @@ class Criatura:
         self.pontos_vida_maximos = pontos_vida
         self.pontos_ataque = pontos_ataque
         self.estado = 0
+        self.x_luta = 0
+        self.y_luta = 0
         self.animacao = Animacao()
         self.lista_anim = []
     

@@ -2,7 +2,7 @@ from grafo import Grafo
 from interface import Tela
 from random import choice
 import pygame as pg
-from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
+from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao, turno_de_batalha
 
 # As telas
 tela_principal = Tela(1200, 700, "LostTreasureIsland")
@@ -24,7 +24,7 @@ pg.mixer.music.play(-1)
 
 # Variáveis de controle
 executando = True
-turno_personagem = True
+turno_batalha = 0
 batalha, checkpoint, tesouro = False, False, False
 decisao_jogador = None
 
@@ -50,7 +50,7 @@ while executando:
         if decisao_jogador == "Lutar":
             batalha = True
             if tela_luta is None:
-                tela_luta = Tela(800, 500, "Fight")
+                tela_luta = Tela(600, 300, "Fight")
                 fundos = ["images\Battleground1.png", "images\Battleground3.png", "images\Battleground4.png"]
                 fundo_escolhido = choice(fundos)
                 tela_luta.definir_imagem_fundo(fundo_escolhido)
@@ -74,7 +74,6 @@ while executando:
 
     if batalha: 
         monstro = capitao.grafo.vertices[capitao.vertice].objeto
-        
         monstro_estado_anterior = monstro.estado
         capitao_estado_anterior = capitao.estado
         monstro.estado = 0
@@ -88,8 +87,8 @@ while executando:
         monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro_estado_anterior)
         
         tela_luta.desenhar_elemento(tela_luta.imagem_fundo, (0, 0))
-        tela_luta.desenhar_elemento(capitao.animacao.obter_frame_atual(), (200, 300))
-        tela_luta.desenhar_elemento(monstro.animacao.obter_frame_atual(), (450, 355))
+        tela_luta.desenhar_elemento(capitao.animacao.obter_frame_atual(), (75, 100))
+        tela_luta.desenhar_elemento(monstro.animacao.obter_frame_atual(), (monstro.x_luta, monstro.y_luta))
 
         tela_luta.atualizar_tela()
     
