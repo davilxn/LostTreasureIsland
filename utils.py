@@ -35,8 +35,8 @@ def inicializa_grafo(grafo, json_path):
 
 def inputGrafo(grafo):
     vertices_possiveis = list(range(1,31))
-    grafo.vertices[0].evento = "praia"
-    grafo.vertices[31].evento = "tesouro"
+    grafo.vertices[0].evento[0] = "praia"
+    grafo.vertices[31].evento[0] = "tesouro"
     n = 6
     
     lista_monstros = inicializa_criaturas(grafo)
@@ -45,37 +45,37 @@ def inputGrafo(grafo):
     for num in perigo:
         vertices_possiveis.remove(num)
         if(num % 2 == 0):
-            grafo.vertices[num].evento = 'areiaMovedica'
+            grafo.vertices[num].evento.append('areiaMovedica')
         else:
-            grafo.vertices[num].evento = 'florestaPerigosa'
+            grafo.vertices[num].evento.append('florestaPerigosa')
     
     num_checkpoints = sample(vertices_possiveis, 3)
     for num in num_checkpoints:
         vertices_possiveis.remove(num)
-        grafo.vertices[num].evento = 'checkpoint'
+        grafo.vertices[num].evento.append('checkpoint')
 
     num_ajudas = sample(vertices_possiveis, n)
     for num in num_ajudas:
         vertices_possiveis.remove(num)
         if(num % 2 == 0):
-            grafo.vertices[num].evento = 'plantaMedicinal'
+            grafo.vertices[num].evento.append('plantaMedicinal')
         else:
-            grafo.vertices[num].evento = 'arma'
+            grafo.vertices[num].evento.append('arma')
     
     num_monstros = sample(vertices_possiveis, n)
     for num in num_monstros:
         vertices_possiveis.remove(num)
-        grafo.vertices[num].evento = 'monstro'
+        grafo.vertices[num].evento.append('monstro')
         
         monstro = choice(lista_monstros)
         monstro.vertice = grafo.vertices[num]
         monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro.estado)
         
-        grafo.vertices[num].objeto = monstro
+        grafo.vertices[num].objeto.append(monstro)
     
     for num in vertices_possiveis:
-         grafo.vertices[num].evento = 'nada'
-         
+         grafo.vertices[num].evento.append('nada')
+
 # De Animações
 def carregar_frames(path_img, num_frames, espelhar=False, vertical=False):
     frames = pg.image.load(path_img)

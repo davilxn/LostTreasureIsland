@@ -60,7 +60,7 @@ class Criatura:
         vertices_proibidos = [vertice_antigo, 0, 31]
         
         for vertice in self.grafo.vertices:
-            if self.grafo.vertices[self.vertice].evento == 'checkpoint':
+            if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
                 vertices_proibidos.append(vertice)
                 
         vertices_disponiveis = [v for v in self.grafo.vertices if v not in vertices_proibidos]
@@ -145,23 +145,22 @@ class Personagem:
         else:
             self.pontos_vida = self.pontos_vida_maximos
             self.vertice = self.checkpoint_atual
-            self.grafo.vertices[self.vertice].evento = 'none'
+            self.grafo.vertices[self.vertice].evento[0] = 'nada'
             self.checkpoint_atual = 0
     
     def fim_de_jogo(self):
         print("Fim de jogo.")
-    
     def interacao_vertice(self):
         batalha, checkpoint, tesouro = False, False, False
-        if self.grafo.vertices[self.vertice].evento == 'checkpoint':
+        if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
             print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
             self.checkpoint_atual = self.vertice
         
-        elif self.grafo.vertices[self.vertice].evento == "monstro":
+        elif any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
             print("Você encontrou um montro sedendo por sangue e destruição!")
             self.em_batalha = True
         
-        elif self.grafo.vertices[self.vertice].evento == "tesouro":
+        elif self.grafo.vertices[self.vertice].evento[0] == "tesouro":
             print("Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio.")
         
     
