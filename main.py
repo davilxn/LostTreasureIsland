@@ -211,14 +211,14 @@ while executando:
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
 
         tela_principal.atualizar_tela()
-        
-            
-    
+         
 pg.mixer.music.stop()
 pg.quit()
 
 ### Área de comentários e observações
-# Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens.
+# Complemento da batalha: Turnos, fuga opcional. Terminar o jogo.
+# Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens. 
+# Mostrar os itens e a quantidade de usos da arma.
 # Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.
 
 # Mostrar informações dos itens na tela, quando o personagem chegar no vértice. Leozim
