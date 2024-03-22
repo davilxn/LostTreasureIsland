@@ -59,7 +59,7 @@ class Criatura:
         vertices_proibidos = [vertice_antigo, 0, 31]
         
         for vertice in self.grafo.vertices:
-            if self.grafo.vertices[vertice].evento == 'checkpoint':
+            if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
                 vertices_proibidos.append(vertice)
                 
         vertices_disponiveis = [v for v in self.grafo.vertices if v not in vertices_proibidos]
@@ -175,13 +175,12 @@ class Personagem:
     
     def fim_de_jogo(self):
         print("Fim de jogo.")
-    
     def interacao_vertice(self):
-        if self.grafo.vertices[self.vertice].evento == 'checkpoint':
-            print(f"Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se. {self.vertice}")
+        if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
+            print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
             self.checkpoint_atual = self.vertice
         
-        elif self.grafo.vertices[self.vertice].evento == "monstro":
+        elif any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
             print("Você encontrou um montro sedendo por sangue e destruição!")
             self.em_batalha = True
         

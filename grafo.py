@@ -75,8 +75,8 @@ class Vertice:
         self.grafo = grafo
         self.id = vertice_id
         self.marca = marca
-        self.evento = evento
-        self.objeto = None
+        self.evento = [evento]
+        self.objeto = []
         self.descricao = ''
         self.vizinhos = []
         self.x = x

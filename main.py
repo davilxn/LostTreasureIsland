@@ -1,10 +1,9 @@
 from grafo import Grafo
 from interface import Tela
 from random import choice
+from personagem import Criatura
 import pygame as pg
 from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
-import time
-
 
 # As telas
 tela_principal = Tela(1200, 700, "LostTreasureIsland")
@@ -64,7 +63,11 @@ while executando:
         elif decisao_jogador == "Fugir":
             # Com o capitão
             batalha = False
-            dano = capitao.grafo.vertices[capitao.vertice].objeto.pontos_ataque
+            monstro = None
+            for objeto in capitao.grafo.vertices[capitao.vertice].objeto:
+                if isinstance(objeto, Criatura):
+                    monstro = objeto
+            dano = monstro.pontos_ataque
             capitao.receber_dano(dano)
             if capitao.pontos_vida == 0:
                 capitao.morte()
@@ -217,7 +220,7 @@ pg.quit()
 
 # Mostrar informações do personagem na tela. Leozim
 # Mostrar informações dos itens na tela, quando o personagem chegar no vértice. Leozim
-# Mais de uma coisa no mesmo vértice. Leozim
+# Vertices com multiplas coisas. Leozim
 
 # Arrumar a tela de luta. Turnos de luta. Davizito
 # Criar a lógica dos monstros e das batalhas. Modificar a construção do grafo pra ter vértices de monstros e mais variedade nos perigos. Davizito
