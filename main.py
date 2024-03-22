@@ -209,7 +209,8 @@ while executando:
 
         tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
-
+        tela_principal.desenhar_vida(capitao.pontos_vida)
+        tela_principal.desenhar_ataquepts(capitao.pontos_ataque)
         tela_principal.atualizar_tela()
          
 pg.mixer.music.stop()
