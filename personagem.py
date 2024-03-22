@@ -51,7 +51,7 @@ class Criatura:
             self.rinha_criatura(lista_monstros)
     
     def atacar(self, alvo):
-        dano_total = randint(0.3*self.pontos_ataque, self.pontos_ataque) 
+        dano_total = randint(int(0.3*self.pontos_ataque), self.pontos_ataque) 
         alvo.receber_dano(dano_total)
         
         return dano_total
@@ -154,7 +154,7 @@ class Personagem:
                     self.tesouro = self.pontos_vida - self.arma.pontos_ataque
     
     def atacar(self, alvo):
-        dano_total = randint(0.3*self.pontos_ataque, self.pontos_ataque)
+        dano_total = randint(int(0.3*self.pontos_ataque), self.pontos_ataque)
         alvo.receber_dano(dano_total)
         self.arma.uso()
         

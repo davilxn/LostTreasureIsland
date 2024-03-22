@@ -53,23 +53,34 @@ class Tela:
         texto_renderizado = fonte.render(texto, True, cor_texto)
         self.tela.blit(texto_renderizado, (posicao[0] + 10, posicao[1] + 10))
 
-    def desenhar_vida(self, vida_atual, cor_fundo=(0, 0, 0), verde=(0, 255, 0), cor_texto=(255, 255, 255), altura=20, largura=100):
+    def desenhar_vida(self, vida_atual,local_y, local_x, cor_fundo=(0, 0, 0), verde=(0, 255, 0), cor_texto=(255, 255, 255), altura=20, largura=100):
         barra_tam = int (largura * (vida_atual/100))
-        pg.draw.rect(self.tela, cor_fundo, (1028, 30, largura, altura))
+        pg.draw.rect(self.tela, cor_fundo, (local_y, 2*local_x, largura, altura))
         fonte = pg.font.Font(None, 20)
         info = fonte.render('vida', True,cor_texto)
-        pg.draw.rect(self.tela, verde, (1028, 30, barra_tam, altura))
-        self.tela.blit(info,(1028,15))
+        pg.draw.rect(self.tela, verde, (local_y, 2*local_x, barra_tam, altura))
+        self.tela.blit(info,(local_y,local_x))
     
-    def desenhar_ataquepts(self, pts_ataque, altura=20, largura=50, cor_fundo=(0, 0, 0), cor_texto=(255, 255, 255)):
+    def desenhar_ataquepts(self, pts_ataque, local_y, local_x, altura=20, largura=50, cor_fundo=(0, 0, 0), cor_texto=(255, 255, 255)):
         pts_ataque_str = str(pts_ataque)
         fonte1 = pg.font.Font(None, 30)
         fonte2 = pg.font.Font(None, 20)
         pts_ataque_renderizado = fonte1.render( pts_ataque_str, True, cor_texto)
         info = fonte2.render('força', True,cor_texto)
-        pg.draw.rect(self.tela, cor_fundo, (900, 30, largura, altura))
-        self.tela.blit(pts_ataque_renderizado, (900, 30))
-        self.tela.blit(info, (900, 15))
+        pg.draw.rect(self.tela, cor_fundo, (local_y, 2*local_x, largura, altura))
+        self.tela.blit(pts_ataque_renderizado, (local_y, 2*local_x))
+        self.tela.blit(info, (local_y, local_x))
+    
+    def desenhar_coracao(self, num_core, local_y=750, local_x=30):
+        i = 0
+        while num_core != 0:
+            imagem_core = pg.image.load("images\capitao\heart.png")
+            imagem_redimensionada = pg.transform.scale(imagem_core, (20, 20))
+            self.desenhar_elemento(imagem_redimensionada,(local_y+i,local_x))
+            i += 30
+            num_core -= 1
+
+        
 
     def aguardar_clique_botao(self):
         botao_clicado = None
