@@ -112,6 +112,7 @@ def calcular_distancia(x_destino, y_destino, x_inicial, y_inicial):
         return (difx**2 + dify**2)**0.5
 
 def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
+    estado_anterior = -1
     if calcular_distancia(destino[0], destino[1], personagem.x, personagem.y) > 8:
         dx = destino[0] - personagem.x
         dy = destino[1] - personagem.y
@@ -124,14 +125,19 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
         personagem.y += incremento_y
         
         personagem.estado = 1
+        estado_anterior = personagem.estado
     else:
+        estado_anterior = personagem.estado
         personagem.estado = 0
+        if estado_anterior != personagem.estado:
+            personagem.interacao_vertice()
+        
 
 # De personagem
 def inicializa_capitao(grafo):
     capitao = Personagem(grafo=grafo)
     arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", capitao.vertice, 10)
-    capitao.arma = arma_inicial
+    capitao.equipar_arma(arma_inicial)
     capitao_idle = carregar_frames("images\capitao\Idle-5frm.png", 5, espelhar=False)
     capitao_caminha = carregar_frames("images\capitao\Run-6frm.png", 6, espelhar=False)
     capitao_ataca1 = carregar_frames("images\capitao\Atk1-6frm.png", 6, espelhar=False)
@@ -140,10 +146,8 @@ def inicializa_capitao(grafo):
     capitao_ataca4 = carregar_frames("images\capitao\Gun-Shoot-5frm.png", 5, espelhar=False)
     capitao_dano = carregar_frames("images\capitao\Hit-3frm.png", 3, espelhar=False)
     capitao_morre = carregar_frames("images\capitao\Death-4frm.png", 4, espelhar=False)
-    capitao_saca = carregar_frames("images\capitao\Gun-Out-6frm.png", 6, espelhar=False)
-    capitao_guarda = carregar_frames("images\capitao\Gun-in-5frm.png", 5, espelhar=False)
     
-    capitao.lista_anim = [capitao_idle, capitao_caminha, capitao_ataca1, capitao_ataca2, capitao_ataca3, capitao_ataca4, capitao_dano, capitao_morre, capitao_saca, capitao_guarda]
+    capitao.lista_anim = [capitao_idle, capitao_caminha, capitao_ataca1, capitao_ataca2, capitao_ataca3, capitao_ataca4, capitao_dano, capitao_morre]
     return capitao
 
 def inicializa_criatura(grafo, sprites, espelhar, vertical=False, x_luta=0, y_luta=0):
@@ -224,25 +228,9 @@ def inicializa_criaturas(grafo):
     barata_militar = inicializa_criatura(grafo, sprites10, True, True, x_luta=350, y_luta=135)
     
     monstros = [dona_morte, mr_eucalipto, master_magrelo, hidra_magrela, lagartixolem, barata_militar]
+    #monstros = [barata_militar]
     return monstros
 
-def turno_de_batalha(personagem, monstro):
-    # Personagem ataca o monstro
-    time.sleep(2.5)
-    estado_luta = choice([2,3,4,5])
-    personagem.animacao.definir_frames(personagem.lista_anim[estado_luta], estado_luta, 0)
-    personagem.animacao.atualizar()
-    personagem.atacar(monstro)
-    personagem.animacao.definir_frames(personagem.lista_anim[0], 0, estado_luta)  # Volta para animação idle
-
-    time.sleep(3000)
     
-    # Monstro ataca o personagem
-    monstro.animacao.definir_frames(monstro.lista_anim[1], 1, 0) 
-    monstro.animacao.atualizar()
-    monstro.atacar(personagem)
-    monstro.animacao.definir_frames(monstro.lista_anim[0], 0, 1) 
-    
-
     
     

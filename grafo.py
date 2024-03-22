@@ -52,6 +52,8 @@ class Grafo:
         caminho_id = []
         for vertice in caminho[0]:
             caminho_id.append(vertice.id)
+        for _, vertice in self.vertices.items():
+            vertice.marca = 0
         return caminho_id
 
     def visita(self, pilha, caminho, fim, vertice):
@@ -67,25 +69,6 @@ class Grafo:
                 else:
                     self.visita(pilha, caminho, fim, vizinho)
         pilha.desempilhar()
-    
-    def encontra_caminho(self):
-        caminho = set()
-        caminho.add(0)
-        iter = 0
-        i = 0
-        while iter <= 150:
-            vizinhos = [vizinho.id for vizinho in self.vertices[i].vizinhos]
-            vizinho_sorteado = random.choice(vizinhos)
-            while vizinho_sorteado in caminho:
-                vizinho_sorteado = random.choice(vizinhos)  
-            caminho.add(vizinho_sorteado)
-            if vizinho_sorteado == 31:
-                break
-            i = vizinho_sorteado
-            iter += 1
-
-        return list(caminho)
-        
 
 class Vertice:
     def __init__(self, vertice_id, x, y, marca=0, evento=None, grafo=None):
