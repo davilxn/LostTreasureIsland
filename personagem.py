@@ -175,6 +175,7 @@ class Personagem:
     
     def fim_de_jogo(self):
         print("Fim de jogo.")
+        
     def interacao_vertice(self):
         if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
             print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
