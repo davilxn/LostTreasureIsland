@@ -84,7 +84,11 @@ while executando:
         decisao_jogador = None
 
     if batalha: 
-        monstro = capitao.grafo.vertices[capitao.vertice].objeto
+        monstro = None
+        for obj in capitao.grafo.vertices[capitao.vertice].objeto:
+            if isinstance(obj, Criatura):
+                monstro = obj
+                
         fps = 50
         if ctrl_anim < fps*max(capitao.animacao.num_frames, monstro.animacao.num_frames):
             monstro_estado_anterior = monstro.estado
@@ -214,14 +218,9 @@ pg.mixer.music.stop()
 pg.quit()
 
 ### Área de comentários e observações
-# Dar nomes diferentes para os perigos que existirem.
 # Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens.
 # Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.
 
-# Mostrar informações do personagem na tela. Leozim
 # Mostrar informações dos itens na tela, quando o personagem chegar no vértice. Leozim
-# Vertices com multiplas coisas. Leozim
 
-# Arrumar a tela de luta. Turnos de luta. Davizito
-# Criar a lógica dos monstros e das batalhas. Modificar a construção do grafo pra ter vértices de monstros e mais variedade nos perigos. Davizito
 # Criar vários objetos do tipo Arma e PlantaMedicinal e espalhar pelos grafos. Como adicionar itens dentro de um vértice.

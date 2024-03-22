@@ -40,23 +40,20 @@ def inputGrafo(grafo):
     n = 6
     
     lista_monstros = inicializa_criaturas(grafo)
-
-    perigo = sample(vertices_possiveis, n)
-    for num in perigo:
-        vertices_possiveis.remove(num)
-        if(num % 2 == 0):
-            grafo.vertices[num].evento.append('areiaMovedica')
-        else:
-            grafo.vertices[num].evento.append('florestaPerigosa')
+    lista_perigosa = ["Areia movediça", "Floresta dos sussuros", "Vulcão", "Poço de cobras", "Chuva de cocô dos pombos do Norte", "Pântano do Zé Jacaré"]
     
     num_checkpoints = sample(vertices_possiveis, 3)
     for num in num_checkpoints:
         vertices_possiveis.remove(num)
         grafo.vertices[num].evento.append('checkpoint')
 
+    perigo = sample(vertices_possiveis, n)
+    for num in perigo:
+        perigo = choice(lista_perigosa)
+        grafo.vertices[num].evento.append(perigo)
+
     num_ajudas = sample(vertices_possiveis, n)
     for num in num_ajudas:
-        vertices_possiveis.remove(num)
         if(num % 2 == 0):
             grafo.vertices[num].evento.append('plantaMedicinal')
         else:
@@ -64,7 +61,6 @@ def inputGrafo(grafo):
     
     num_monstros = sample(vertices_possiveis, n)
     for num in num_monstros:
-        vertices_possiveis.remove(num)
         grafo.vertices[num].evento.append('monstro')
         
         monstro = choice(lista_monstros)
@@ -79,7 +75,6 @@ def inputGrafo(grafo):
 # De Animações
 def carregar_frames(path_img, num_frames, espelhar=False, vertical=False):
     frames = pg.image.load(path_img)
-    
     if vertical:
         largura_frame = frames.get_width()
         altura_frame = frames.get_height() // num_frames
@@ -161,6 +156,7 @@ def inicializa_criatura(grafo, sprites, espelhar, vertical=False, x_luta=0, y_lu
     monstro.lista_anim = [monstro_idle, monstro_ataca, monstro_dano, monstro_morre]
     
     return monstro
+        
 
 def inicializa_criaturas(grafo):
     sprites1 = [("images\monstros\lobo\idle_6frm.png", 6), 
@@ -213,6 +209,7 @@ def inicializa_criaturas(grafo):
                ("images\monstros\old_guardian\Old_Guardian_hit.png", 4), 
                ("images\monstros\old_guardian\Old_Guardian_death.png", 10)]
     
+    
     # Opções extra
     jacob = inicializa_criatura(grafo, sprites1, False)
     oscar = inicializa_criatura(grafo, sprites2, True)
@@ -228,7 +225,6 @@ def inicializa_criaturas(grafo):
     barata_militar = inicializa_criatura(grafo, sprites10, True, True, x_luta=350, y_luta=135)
     
     monstros = [dona_morte, mr_eucalipto, master_magrelo, hidra_magrela, lagartixolem, barata_militar]
-    #monstros = [barata_militar]
     return monstros
 
     

@@ -40,8 +40,15 @@ class Criatura:
         self.animacao = Animacao()
         self.lista_anim = []
     
-    def mover(self, novo_vertice):
-        self.vertice = novo_vertice
+    def verifica_rinha(self):
+        lista_monstros = []
+        for obj in self.grafo.vertices[self.vertice].objeto:
+            if isinstance(obj, Criatura) and obj != self:
+                lista_monstros.append(obj)
+        
+        if len(lista_monstros) > 0:
+            lista_monstros.append(self)
+            self.rinha_criatura(lista_monstros)
     
     def atacar(self, alvo):
         dano_total = randint(0.3*self.pontos_ataque, self.pontos_ataque) 
@@ -54,18 +61,45 @@ class Criatura:
         if self.pontos_vida < 0:
             self.pontos_vida = 0
     
-    def ressucitar(self):
+    def mover(self):
+        if self.pontos_vida == 0:
+            self.pontos_vida == 100
+            
         vertice_antigo = self.vertice
         vertices_proibidos = [vertice_antigo, 0, 31]
-        
         for vertice in self.grafo.vertices:
             if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
                 vertices_proibidos.append(vertice)
                 
         vertices_disponiveis = [v for v in self.grafo.vertices if v not in vertices_proibidos]
         vertice_novo = choice(vertices_disponiveis)
-        self.mover(vertice_novo)
-
+        
+        # Adiciona o monstro no novo vértice
+        self.vertice = vertice_novo
+        self.grafo.vertices[self.vertice].objeto.append(self)
+        if not any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
+            self.grafo.vertices[self.vertice].evento.append("monstro")
+        
+        self.verifica_rinha()
+    
+    def rinha_criatura(lista_monstros):
+        forte, fraco = None, None
+        for monstro in lista_monstros:
+            if forte == None and fraco == None:
+                forte, fraco = monstro, monstro
+            if monstro.pontos_ataque > forte:
+                forte = monstro
+            if monstro.pontos_ataque < fraco:
+                fraco = monstro
+        
+        forte.receber_dano(fraco.pontos_ataque)
+        fraco.receber_dano(100)
+        fraco.mover()
+        for monstro in lista_monstros:
+            if monstro != forte and monstro != fraco:
+                monstro.recebe_dano(forte.pontos_ataque)
+                monstro.mover()
+        
 class Personagem:
     def __init__(self, grafo, pontos_vida=100, pontos_ataque=0):
         # Referentes ao grafo
@@ -96,6 +130,12 @@ class Personagem:
         self.vertice = self.caminho[self.ind_caminho]
         self.arma.vertice = self.vertice
         self.transporta_tesouro()
+        
+        # Os montros devem se mover, também
+        for vertice in self.grafo.vertices:
+            for obj in vertice.objeto:
+                if isinstance(obj, Criatura):
+                    obj.ressucitar()
         
     def estado_atual(self):
         print(f"\nVida: {self.pontos_vida}")
@@ -181,18 +221,30 @@ class Personagem:
             print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
             self.checkpoint_atual = self.vertice
         
-        elif any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
+        if any(event == "areiaMovedica" or event == "florestaPerigosa" for event in self.grafo.vertices[self.vertice].evento):
+            dano = randint(1, 10)
+            print(f"Você encontrou um perigo. Perdeu {dano} pontos de vida. Tome cuidado!")
+        
+        if any(event == "plantaMedicinal" for event in self.grafo.vertices[self.vertice].evento):
+            print("Que sorte! Você encontrou uma planta medicianal.")
+            if self.pontos_vida < 100:
+                self.pontos_vida += 10
+                print("Você utilizou a planta para fazer um curativo e sua vida foi regenerada!")
+            else:
+                print("No entanto, ela não lhe não lhe servirá de nada, pois você já está bem de vida. Sombra e água fresca.")
+                
+        if any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
             print("Você encontrou um montro sedendo por sangue e destruição!")
             self.em_batalha = True
         
-        elif self.vertice == 31 and (not self.tesouro):
+        if self.vertice == 31 and (not self.tesouro):
             self.caminho = self.grafo.dfs(31,0)
             self.ind_caminho = 0
             self.vertice = self.caminho[0]
             self.tesouro = self.pontos_vida - self.arma.pontos_ataque
             print("Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio.")
-            
-        elif self.tesouro and self.vertice == 0:
+        
+        if self.tesouro and self.vertice == 0:
             print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e não cometa a estupidez de retornar a esta ilha.")
         
         self.estado_atual()
