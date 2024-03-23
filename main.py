@@ -196,6 +196,9 @@ while executando:
         tela_luta.desenhar_elemento(tela_luta.imagem_fundo, (0, 0))
         tela_luta.desenhar_elemento(capitao.animacao.obter_frame_atual(), (75, 100))
         tela_luta.desenhar_elemento(monstro.animacao.obter_frame_atual(), (monstro.x_luta, monstro.y_luta))
+        tela_luta.desenhar_vida(capitao.pontos_vida,100,15)
+        tela_luta.desenhar_vida(monstro.pontos_vida,350,15,verde=(255, 0, 0))
+        tela_luta.desenhar_ataquepts(capitao.pontos_ataque,15,15)
         tela_luta.atualizar_tela()
         
     else: # Lógica Capitão correndo no mapa
@@ -209,8 +212,9 @@ while executando:
 
         tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
-        tela_principal.desenhar_vida(capitao.pontos_vida)
-        tela_principal.desenhar_ataquepts(capitao.pontos_ataque)
+        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
+        tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
         tela_principal.atualizar_tela()
          
 pg.mixer.music.stop()
