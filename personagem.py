@@ -70,6 +70,9 @@ class Criatura:
         # Adiciona o monstro no novo vértice
         self.vertice = vertice_novo
         self.grafo.vertices[self.vertice].objeto.append(self)
+        
+        if isinstance(self.grafo.vertices[self.vertice].evento, str):
+            self.grafo.vertices[self.vertice].evento = [self.grafo.vertices[self.vertice].evento]
         self.grafo.vertices[self.vertice].evento.append("monstro")
         
         self.verifica_rinha()
@@ -119,6 +122,7 @@ class Personagem:
         
         # Referentes ao Capitão
         self.pontos_vida = pontos_vida
+        self.menor_vida = 100
         self.pontos_vida_maximos = pontos_vida
         self.vidas_restantes = 3
         self.tesouro = 0
@@ -152,14 +156,10 @@ class Personagem:
         print(f"Caminho: {self.caminho}\n")
     
     def transporta_tesouro(self):
-        if self.tesouro:
-            if self.vidas_restantes == 3:
-                self.tesouro = self.pontos_vida - self.arma.pontos_ataque
-                if self.tesouro < 0:
-                    self.tesouro = 0
-            else:
-                if self.pontos_vida < self.tesouro:
-                    self.tesouro = self.pontos_vida - self.arma.pontos_ataque
+        if self.tesouro:                    
+            self.tesouro = self.menor_vida - self.arma.pontos_ataque
+            if self.tesouro < 0:
+                self.tesouro = 0
     
     def atacar(self, alvo):
         dano_total = randint(int(0.3*self.pontos_ataque), self.pontos_ataque)
@@ -174,7 +174,9 @@ class Personagem:
         self.pontos_vida -= quantidade
         if self.pontos_vida <= 0:
             self.pontos_vida = 0
-            
+        
+        if self.pontos_vida > 0 and self.pontos_vida < self.menor_vida:
+            self.menor_vida = self.pontos_vida   
         if self.tesouro and self.pontos_vida > 0:
             self.transporta_tesouro()
         

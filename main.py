@@ -190,6 +190,8 @@ while executando:
                     tela_principal = Tela(1200, 700, "LostTreasureIsland")
                     tela_principal.definir_imagem_fundo("images\PNG map.jpg")
             
+            
+            
             ### Decida se quer continuar lutanto ou fugir
             if turno_anterior != turno:
                 mensagem = "Você pode continuar lutando ou fugir para viver e lutar mais um dia."
