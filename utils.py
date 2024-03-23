@@ -25,7 +25,7 @@ def inicializa_grafo(grafo, json_path):
                (15,23),(14,22),(20,30),(20,21),(20,22),(21,22),
                (21,30),(21,31),(10,25),(10,17),(11,19),(11,17),
                (19,30),(19,18),(19,31),(18,17),(18,24),(24,25),
-               (29,25),(29,31),(29,28),(25,31),(26,28),(26,27),
+               (29,25),(29,31),(29,28),(26,28),(26,27),
                (26,23),(26,16)]
     
     for aresta in arestas:
@@ -64,7 +64,7 @@ def inputGrafo(grafo):
         grafo.vertices[num].evento.append('monstro')
         
         monstro = choice(lista_monstros)
-        monstro.vertice = grafo.vertices[num]
+        monstro.vertice = num
         monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro.estado)
         
         grafo.vertices[num].objeto.append(monstro)

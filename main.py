@@ -183,7 +183,7 @@ while executando:
                     if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
                         turno_monstro, turno_capitao, vez = False, False, False
                         ctrl_anim = 0
-                        monstro.ressucitar()
+                        monstro.mover()
                         batalha = False
                         capitao.em_batalha = False
                         tela_principal = Tela(1200, 700, "LostTreasureIsland")

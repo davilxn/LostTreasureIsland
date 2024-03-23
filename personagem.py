@@ -28,7 +28,7 @@ class Arma:
         return False
 
 class Criatura:
-    def __init__(self, grafo, vertice=None, pontos_vida=100, pontos_ataque=40):
+    def __init__(self, grafo, vertice=None, pontos_vida=100, pontos_ataque=20):
         self.grafo = grafo
         self.vertice = vertice
         self.pontos_vida = pontos_vida
@@ -39,16 +39,6 @@ class Criatura:
         self.y_luta = 0
         self.animacao = Animacao()
         self.lista_anim = []
-    
-    def verifica_rinha(self):
-        lista_monstros = []
-        for obj in self.grafo.vertices[self.vertice].objeto:
-            if isinstance(obj, Criatura) and obj != self:
-                lista_monstros.append(obj)
-        
-        if len(lista_monstros) > 0:
-            lista_monstros.append(self)
-            self.rinha_criatura(lista_monstros)
     
     def atacar(self, alvo):
         dano_total = randint(0.3*self.pontos_ataque, self.pontos_ataque) 
@@ -63,41 +53,57 @@ class Criatura:
     
     def mover(self):
         if self.pontos_vida == 0:
-            self.pontos_vida == 100
-            
+            self.pontos_vida = 100
         vertice_antigo = self.vertice
         vertices_proibidos = [vertice_antigo, 0, 31]
         for vertice in self.grafo.vertices:
-            if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
+            if any(event == "checkpoint" for event in self.grafo.vertices[vertice].evento):
                 vertices_proibidos.append(vertice)
                 
         vertices_disponiveis = [v for v in self.grafo.vertices if v not in vertices_proibidos]
         vertice_novo = choice(vertices_disponiveis)
         
+        # Remove o monstro do vértice atual
+        self.grafo.vertices[vertice_antigo].objeto.remove(self)
+        self.grafo.vertices[vertice_antigo].evento.remove("monstro")
+        
         # Adiciona o monstro no novo vértice
         self.vertice = vertice_novo
         self.grafo.vertices[self.vertice].objeto.append(self)
-        if not any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
-            self.grafo.vertices[self.vertice].evento.append("monstro")
+        self.grafo.vertices[self.vertice].evento.append("monstro")
         
         self.verifica_rinha()
+        
+    def verifica_rinha(self):
+        lista_monstros = []
+        for obj in self.grafo.vertices[self.vertice].objeto:
+            if isinstance(obj, Criatura) and obj != self:
+                lista_monstros.append(obj)
+        
+        if len(lista_monstros) > 0:
+            lista_monstros.append(self)
+            self.rinha_criatura(lista_monstros)
     
-    def rinha_criatura(lista_monstros):
+    def rinha_criatura(self, lista_monstros):
         forte, fraco = None, None
         for monstro in lista_monstros:
             if forte == None and fraco == None:
                 forte, fraco = monstro, monstro
-            if monstro.pontos_ataque > forte:
+            if monstro.pontos_ataque > forte.pontos_ataque:
                 forte = monstro
-            if monstro.pontos_ataque < fraco:
+            if monstro.pontos_ataque < fraco.pontos_ataque:
                 fraco = monstro
         
         forte.receber_dano(fraco.pontos_ataque)
+        if forte.pontos_vida <= 0:
+            forte.pontos_vida = 0
+            forte.mover()
+        
         fraco.receber_dano(100)
         fraco.mover()
         for monstro in lista_monstros:
             if monstro != forte and monstro != fraco:
-                monstro.recebe_dano(forte.pontos_ataque)
+                monstro.receber_dano(forte.pontos_ataque)
                 monstro.mover()
         
 class Personagem:
@@ -133,9 +139,9 @@ class Personagem:
         
         # Os montros devem se mover, também
         for vertice in self.grafo.vertices:
-            for obj in vertice.objeto:
+            for obj in self.grafo.vertices[vertice].objeto:
                 if isinstance(obj, Criatura):
-                    obj.ressucitar()
+                    obj.mover()
         
     def estado_atual(self):
         print(f"\nVida: {self.pontos_vida}")
