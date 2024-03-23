@@ -9,7 +9,7 @@ class PlantaMedicial:
         self.pontos_vida = pontos_vida
     
 class Arma:
-    def __init__(self, nome, descricao, vertice, pontos_ataque, usos_maximos=1000000):
+    def __init__(self, nome, descricao, vertice, pontos_ataque, usos_maximos=1000):
         self.nome = nome
         self.descricao = descricao
         self.pontos_ataque = pontos_ataque
@@ -107,7 +107,7 @@ class Criatura:
                 monstro.mover()
         
 class Personagem:
-    def __init__(self, grafo, pontos_vida=100, pontos_ataque=0):
+    def __init__(self, grafo, pontos_vida=100, pontos_ataque=10):
         # Referentes ao grafo
         self.grafo = grafo
         self.caminho = self.grafo.dfs(0,31)
@@ -155,6 +155,8 @@ class Personagem:
         if self.tesouro:
             if self.vidas_restantes == 3:
                 self.tesouro = self.pontos_vida - self.arma.pontos_ataque
+                if self.tesouro < 0:
+                    self.tesouro = 0
             else:
                 if self.pontos_vida < self.tesouro:
                     self.tesouro = self.pontos_vida - self.arma.pontos_ataque
@@ -162,7 +164,6 @@ class Personagem:
     def atacar(self, alvo):
         dano_total = randint(int(0.3*self.pontos_ataque), self.pontos_ataque)
         alvo.receber_dano(dano_total)
-        self.arma.uso()
         
         if self.arma.verificar_quebrada():
             self.desequipar_arma()
@@ -221,9 +222,10 @@ class Personagem:
     
     def fim_de_jogo(self):
         print("Fim de jogo.")
+        exit()
         
     def interacao_vertice(self):
-        if self.grafo.vertices[self.vertice].evento[0] == 'checkpoint':
+        if any(event == "checkpoint" for event in self.grafo.vertices[self.vertice].evento):
             print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
             self.checkpoint_atual = self.vertice
         
@@ -252,6 +254,7 @@ class Personagem:
         
         if self.tesouro and self.vertice == 0:
             print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e não cometa a estupidez de retornar a esta ilha.")
+            self.fim_de_jogo()
         
         self.estado_atual()
         

@@ -30,7 +30,7 @@ decisao_jogador = None
 ctrl_anim = 0
 turno_capitao, turno_monstro, vez = False, False, False
 estado_luta = None
-turno = 0
+turno, turno_anterior = 0, 0
 
 # Loop principal
 while executando:
@@ -48,7 +48,7 @@ while executando:
         tela_principal.desenhar_botao("Fugir", (250, 400))
         tela_principal.atualizar_tela()
 
-        decisao_jogador = tela_principal.aguardar_clique_botao()
+        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450))
         
         if decisao_jogador == "Lutar":
             batalha = True
@@ -109,90 +109,131 @@ while executando:
                 ctrl_anim += 10000000000
                 
         else:
-            if turno < 3:
-                capitao.animacao.atualizar()
-                monstro.animacao.atualizar()
+            capitao.animacao.atualizar()
+            monstro.animacao.atualizar()
+            turno_anterior = turno
+            # Capitão bate
+            if turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
+                monstro.estado, capitao.estado = 0, estado_luta
                 
-                # Capitão bate
-                if turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
-                    monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
-                    monstro.estado, capitao.estado = 0, estado_luta
-                    
-                    capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado], capitao.estado, capitao_estado_anterior)
-                    if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
-                        turno_capitao = False
-                        capitao.animacao.definir_frames(capitao.lista_anim[0], 0, capitao.estado)
-                        monstro.animacao.definir_frames(monstro.lista_anim[2], 2, monstro.estado)
+                capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado], capitao.estado, capitao_estado_anterior)
+                if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
+                    turno_capitao = False
+                    capitao.animacao.definir_frames(capitao.lista_anim[0], 0, capitao.estado)
+                    monstro.animacao.definir_frames(monstro.lista_anim[2], 2, monstro.estado)
+            
+            # Monstro apanha       
+            elif not turno_monstro and (not vez) and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
+                monstro.estado, capitao.estado = 2, 0
                 
-                # Monstro apanha       
-                elif not turno_monstro and (not vez) and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
-                    monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
-                    monstro.estado, capitao.estado = 2, 0
-                    
-                    monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro_estado_anterior)
-                    if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
-                        turno_monstro = True
-                        capitao.atacar(monstro)
-                        monstro.animacao.definir_frames(monstro.lista_anim[1], 1, monstro.estado) 
+                monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro_estado_anterior)
+                if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
+                    turno_monstro = True
+                    capitao.atacar(monstro)
+                    monstro.animacao.definir_frames(monstro.lista_anim[1], 1, monstro.estado) 
+            
+            # Monstro bate       
+            elif turno_monstro and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
+                monstro.estado, capitao.estado = 1, 0
                 
-                # Monstro bate       
-                elif turno_monstro and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
-                    monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
-                    monstro.estado, capitao.estado = 1, 0
-                    
-                    monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro_estado_anterior)
-                    if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
-                        turno_monstro = False
-                        vez = True
-                        monstro.animacao.definir_frames(monstro.lista_anim[0], 0, monstro.estado)
-                        capitao.animacao.definir_frames(capitao.lista_anim[6], 6, capitao.estado)
-                    
-                # Capitão apanha        
-                elif not turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
-                    monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
-                    monstro.estado, capitao.estado = 0, 6
-                    
-                    capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado],capitao.estado, capitao_estado_anterior)
-                    if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
-                        turno_capitao, turno_monstro, vez = False, False, False
-                        monstro.atacar(capitao)
-                        ctrl_anim = 0
-                        turno += 1
+                monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado], monstro.estado, monstro_estado_anterior)
+                if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
+                    turno_monstro = False
+                    vez = True
+                    monstro.animacao.definir_frames(monstro.lista_anim[0], 0, monstro.estado)
+                    capitao.animacao.definir_frames(capitao.lista_anim[6], 6, capitao.estado)
                 
-                # Capitão morre
-                elif capitao.pontos_vida == 0 and monstro.pontos_vida != 0:
-                    monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
-                    monstro.estado, capitao.estado = 0, 7
-                    
-                    capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado],capitao.estado, capitao_estado_anterior)
-                    if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
-                        turno_capitao, turno_monstro, vez = False, False, False
-                        ctrl_anim = 0
+            # Capitão apanha        
+            elif not turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
+                monstro.estado, capitao.estado = 0, 6
+                
+                capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado],capitao.estado, capitao_estado_anterior)
+                if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
+                    turno_capitao, turno_monstro, vez = False, False, False
+                    monstro.atacar(capitao)
+                    ctrl_anim = 0
+                    turno += 1
+            
+            # Capitão morre
+            elif capitao.pontos_vida == 0 and monstro.pontos_vida != 0:
+                monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
+                monstro.estado, capitao.estado = 0, 7
+                
+                capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado],capitao.estado, capitao_estado_anterior)
+                if capitao.animacao.indice_frame == capitao.animacao.num_frames-1:
+                    turno_capitao, turno_monstro, vez = False, False, False
+                    ctrl_anim = 0
+                    capitao.morte()
+                    batalha = False
+                    capitao.em_batalha = False
+                    capitao.arma.uso()
+                    tela_principal = Tela(1200, 700, "LostTreasureIsland")
+                    tela_principal.definir_imagem_fundo("images\PNG map.jpg")
+            
+            # Monstro morre
+            elif monstro.pontos_vida == 0 and capitao.pontos_vida != 0:
+                capitao_estado_anterior, monstro_estado_anterior = capitao.estado, monstro.estado
+                capitao.estado, monstro.estado = 0, 3
+                
+                monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado],monstro.estado, monstro_estado_anterior)
+                if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
+                    turno_monstro, turno_capitao, vez = False, False, False
+                    ctrl_anim = 0
+                    monstro.mover()
+                    batalha = False
+                    capitao.em_batalha = False
+                    capitao.arma.uso()
+                    tela_principal = Tela(1200, 700, "LostTreasureIsland")
+                    tela_principal.definir_imagem_fundo("images\PNG map.jpg")
+            
+            ### Decida se quer continuar lutanto ou fugir
+            if turno_anterior != turno:
+                mensagem = "Você pode continuar lutando ou fugir para viver e lutar mais um dia."
+                tela_luta.exibir_mensagem(mensagem, (50, 140))
+                tela_luta.desenhar_botao("Lutar", (100, 165))
+                tela_luta.desenhar_botao("Fugir", (400, 165))
+                tela_luta.atualizar_tela()
+
+                decisao_jogador = tela_luta.aguardar_clique_botao((100, 350, 165, 215), (400, 550, 165, 215))
+                
+                if decisao_jogador == "Lutar":
+                    pass
+                        
+                elif decisao_jogador == "Fugir":
+                    # Com o capitão
+                    monstro = None
+                    for objeto in capitao.grafo.vertices[capitao.vertice].objeto:
+                        if isinstance(objeto, Criatura):
+                            monstro = objeto
+                    dano = monstro.pontos_ataque
+                    capitao.receber_dano(dano)
+                    if capitao.pontos_vida == 0:
                         capitao.morte()
-                        batalha = False
-                        capitao.em_batalha = False
-                        tela_principal = Tela(1200, 700, "LostTreasureIsland")
-                        tela_principal.definir_imagem_fundo("images\PNG map.jpg")
-                
-                # Monstro morre
-                elif monstro.pontos_vida == 0 and capitao.pontos_vida != 0:
-                    capitao_estado_anterior, monstro_estado_anterior = capitao.estado, monstro.estado
-                    capitao.estado, monstro.estado = 0, 3
+                        
+                    capitao.em_batalha = False
+                    batalha = False
+                    turno_monstro, turno_capitao, vez = False, False, False
+                    ctrl_anim = 0
+                    capitao.arma.uso()
+                    tela_principal = Tela(1200, 700, "LostTreasureIsland")
+                    tela_principal.definir_imagem_fundo("images\PNG map.jpg")
                     
-                    monstro.animacao.definir_frames(monstro.lista_anim[monstro.estado],monstro.estado, monstro_estado_anterior)
-                    if monstro.animacao.indice_frame == monstro.animacao.num_frames-1:
-                        turno_monstro, turno_capitao, vez = False, False, False
-                        ctrl_anim = 0
-                        monstro.mover()
-                        batalha = False
-                        capitao.em_batalha = False
-                        tela_principal = Tela(1200, 700, "LostTreasureIsland")
-                        tela_principal.definir_imagem_fundo("images\PNG map.jpg")
-
-            else:
-                turno = 0
-
-        print(capitao.pontos_vida, monstro.pontos_vida)
+                    # Com a tela
+                    tela_principal.limpar_tela()
+                    tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
+                    mensagem = f"Você fugiu da criatura, mas antes que conseguisse, foi atingido com um golpe raspão. Perdeu {dano} pontos de vida."
+                    tela_principal.exibir_mensagem(mensagem, (200, 350))
+                    tela_principal.atualizar_tela()
+                    #pg.time.delay(5000)
+                    
+                    capitao.mover()
+                    
+                decisao_jogador = None
+        
         tela_luta.desenhar_elemento(tela_luta.imagem_fundo, (0, 0))
         tela_luta.desenhar_elemento(capitao.animacao.obter_frame_atual(), (75, 100))
         tela_luta.desenhar_elemento(monstro.animacao.obter_frame_atual(), (monstro.x_luta, monstro.y_luta))
@@ -210,6 +251,7 @@ while executando:
 
         capitao.animacao.definir_frames(capitao.lista_anim[capitao.estado], capitao.estado, estado_anterior)
 
+        tela_principal.limpar_tela()
         tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
         tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
@@ -221,7 +263,7 @@ pg.mixer.music.stop()
 pg.quit()
 
 ### Área de comentários e observações
-# Complemento da batalha: Turnos, fuga opcional. Terminar o jogo.
+
 # Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens. 
 # Mostrar os itens e a quantidade de usos da arma.
 # Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.

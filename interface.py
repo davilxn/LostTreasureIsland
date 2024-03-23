@@ -57,7 +57,7 @@ class Tela:
         barra_tam = int (largura * (vida_atual/100))
         pg.draw.rect(self.tela, cor_fundo, (local_y, 2*local_x, largura, altura))
         fonte = pg.font.Font(None, 20)
-        info = fonte.render('vida', True,cor_texto)
+        info = fonte.render('Vida', True,cor_texto)
         pg.draw.rect(self.tela, verde, (local_y, 2*local_x, barra_tam, altura))
         self.tela.blit(info,(local_y,local_x))
     
@@ -66,7 +66,7 @@ class Tela:
         fonte1 = pg.font.Font(None, 30)
         fonte2 = pg.font.Font(None, 20)
         pts_ataque_renderizado = fonte1.render( pts_ataque_str, True, cor_texto)
-        info = fonte2.render('força', True,cor_texto)
+        info = fonte2.render('Ataque', True,cor_texto)
         pg.draw.rect(self.tela, cor_fundo, (local_y, 2*local_x, largura, altura))
         self.tela.blit(pts_ataque_renderizado, (local_y, 2*local_x))
         self.tela.blit(info, (local_y, local_x))
@@ -80,9 +80,7 @@ class Tela:
             i += 30
             num_core -= 1
 
-        
-
-    def aguardar_clique_botao(self):
+    def aguardar_clique_botao(self, pos_lutar, pos_fugir):
         botao_clicado = None
         while botao_clicado is None:
             for evento in pg.event.get():
@@ -91,11 +89,12 @@ class Tela:
                     exit()
                 elif evento.type == pg.MOUSEBUTTONDOWN:
                     posicao_mouse = pg.mouse.get_pos()
-                    if 50 <= posicao_mouse[0] <= 200 and 400 <= posicao_mouse[1] <= 450:
+                    if pos_lutar[0] <= posicao_mouse[0] <= pos_lutar[1] and pos_lutar[2] <= posicao_mouse[1] <= pos_lutar[3]:
                         botao_clicado = "Lutar"
-                    elif 250 <= posicao_mouse[0] <= 400 and 400 <= posicao_mouse[1] <= 450:
+                    elif pos_fugir[0] <= posicao_mouse[0] <= pos_fugir[1] and pos_fugir[2] <= posicao_mouse[1] <= pos_fugir[3]:
                         botao_clicado = "Fugir"
         return botao_clicado
+    
 
     def atualizar_tela(self):
         pg.display.flip()
