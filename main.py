@@ -49,12 +49,17 @@ while executando:
         tela_principal.desenhar_botao("Trocar", (250, 400))
         tela_principal.atualizar_tela()
 
-        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450))
+        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450), "Manter", "Trocar")
         if decisao_jogador == "Trocar":
             capitao.equipar_arma(arma[0])
+        if capitao.arma.nome in ["Desesperado", "Justiceiro", "Morte Súbita", "Ressurgente"]:
+                estado_luta = 5
         else:
-            pass
+            estado_luta = choice([2,3,4])
+            
         capitao.arma_nova = False
+        decisao_jogador = None
+        
           
     if capitao.em_batalha and not batalha:
         mensagem = "Você encontrou um monstro sedento por sangue e destruição! O que deseja fazer?"
@@ -63,7 +68,7 @@ while executando:
         tela_principal.desenhar_botao("Fugir", (250, 400))
         tela_principal.atualizar_tela()
 
-        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450))
+        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450), "Lutar", "Fugir")
         
         if decisao_jogador == "Lutar":
             batalha = True
@@ -72,11 +77,6 @@ while executando:
                 fundos = ["images\Battleground1.png", "images\Battleground3.png", "images\Battleground4.png"]
                 fundo_escolhido = choice(fundos)
                 tela_luta.definir_imagem_fundo(fundo_escolhido)
-            
-            if capitao.arma.nome in ["Desesperado", "Justiceiro", "Morte Súbita", "Ressurgente"]:
-                estado_luta = 5
-            else:
-                estado_luta = choice([2,3,4])
                 
         elif decisao_jogador == "Fugir":
             # Com o capitão
@@ -217,7 +217,7 @@ while executando:
                 tela_luta.desenhar_botao("Fugir", (400, 165))
                 tela_luta.atualizar_tela()
 
-                decisao_jogador = tela_luta.aguardar_clique_botao((100, 350, 165, 215), (400, 550, 165, 215))
+                decisao_jogador = tela_luta.aguardar_clique_botao((100, 350, 165, 215), (400, 550, 165, 215), "Lutar", "Fugir")
                 
                 if decisao_jogador == "Lutar":
                     pass
@@ -283,10 +283,4 @@ pg.quit()
 
 ### Área de comentários e observações
 
-# Criar lógicas dos itens. Talvez uma classe Item, pai de Armas. Itens pelo mapa. Coletar e usar itens. 
-# Mostrar os itens e a quantidade de usos da arma.
 # Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.
-
-# Mostrar informações dos itens na tela, quando o personagem chegar no vértice. Leozim
-
-# Criar vários objetos do tipo Arma e PlantaMedicinal e espalhar pelos grafos. Como adicionar itens dentro de um vértice.

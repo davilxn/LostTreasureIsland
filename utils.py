@@ -265,7 +265,8 @@ def inicializa_armas(grafo):
     descricao = "Um revólver de aparência simples, mas com uma história de ressurgimento, sempre encontrando seu caminho de volta para as mãos de seu verdadeiro dono."
     arma8 = Arma("Ressurgente", descricao, pontos_ataque=31)
     
-    lista_armas = [arma1, arma2, arma3, arma4, arma5, arma6, arma7, arma8]
+    #lista_armas = [arma1, arma2, arma3, arma4, arma5, arma6, arma7, arma8]
+    lista_armas = [arma5, arma6, arma7, arma8]
     return lista_armas
 
 def inicializa_remedios(grafo):

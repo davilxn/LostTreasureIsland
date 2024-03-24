@@ -80,7 +80,7 @@ class Tela:
             i += 30
             num_core -= 1
 
-    def aguardar_clique_botao(self, pos_lutar, pos_fugir):
+    def aguardar_clique_botao(self, pos1, pos2, bot1, bot2):
         botao_clicado = None
         while botao_clicado is None:
             for evento in pg.event.get():
@@ -89,10 +89,10 @@ class Tela:
                     exit()
                 elif evento.type == pg.MOUSEBUTTONDOWN:
                     posicao_mouse = pg.mouse.get_pos()
-                    if pos_lutar[0] <= posicao_mouse[0] <= pos_lutar[1] and pos_lutar[2] <= posicao_mouse[1] <= pos_lutar[3]:
-                        botao_clicado = "Lutar"
-                    elif pos_fugir[0] <= posicao_mouse[0] <= pos_fugir[1] and pos_fugir[2] <= posicao_mouse[1] <= pos_fugir[3]:
-                        botao_clicado = "Fugir"
+                    if pos1[0] <= posicao_mouse[0] <= pos1[1] and pos1[2] <= posicao_mouse[1] <= pos1[3]:
+                        botao_clicado = bot1
+                    elif pos2[0] <= posicao_mouse[0] <= pos2[1] and pos2[2] <= posicao_mouse[1] <= pos2[3]:
+                        botao_clicado = bot2
         return botao_clicado
     
 
