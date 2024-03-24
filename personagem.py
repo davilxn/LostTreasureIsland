@@ -123,6 +123,7 @@ class Personagem:
         # Referentes ao Capitão
         self.pontos_vida = pontos_vida
         self.menor_vida = 100
+        self.maior_ataque = self.pontos_ataque
         self.pontos_vida_maximos = pontos_vida
         self.vidas_restantes = 3
         self.tesouro = 0
@@ -162,7 +163,7 @@ class Personagem:
     
     def transporta_tesouro(self):
         if self.tesouro:                    
-            self.tesouro = self.menor_vida - self.arma.pontos_ataque
+            self.tesouro = self.menor_vida - self.maior_ataque
             if self.tesouro < 0:
                 self.tesouro = 0
     
@@ -181,7 +182,8 @@ class Personagem:
             self.pontos_vida = 0
         
         if self.pontos_vida > 0 and self.pontos_vida < self.menor_vida:
-            self.menor_vida = self.pontos_vida   
+            self.menor_vida = self.pontos_vida  
+             
         if self.tesouro and self.pontos_vida > 0:
             self.transporta_tesouro()
         
@@ -194,6 +196,8 @@ class Personagem:
     def equipar_arma(self, arma):
         self.arma = arma
         self.pontos_ataque = self.arma.pontos_ataque
+        if self.pontos_ataque > self.maior_ataque:
+            self.maior_ataque = self.pontos_ataque
         if self.tesouro != 0:
             self.transporta_tesouro()
 
