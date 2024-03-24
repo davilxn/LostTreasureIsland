@@ -1,7 +1,7 @@
 from grafo import Grafo
 from interface import Tela
 from random import choice
-from personagem import Criatura
+from personagem import Criatura, Arma
 import pygame as pg
 from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
 
@@ -40,6 +40,21 @@ while executando:
         
         elif evento.type == pg.MOUSEBUTTONDOWN:
             capitao.mover()
+    
+    if capitao.arma_nova:
+        arma = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, Arma)]
+        mensagem = f"Que sorte! Você encontrou: {arma[0].nome}.\n{arma[0].descricao} Deseja trocar de arma ou manter a arma atual?"
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_botao("Manter", (50, 400))
+        tela_principal.desenhar_botao("Trocar", (250, 400))
+        tela_principal.atualizar_tela()
+
+        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450))
+        if decisao_jogador == "Trocar":
+            capitao.equipar_arma(arma[0])
+        else:
+            pass
+        capitao.arma_nova = False
           
     if capitao.em_batalha and not batalha:
         mensagem = "Você encontrou um monstro sedento por sangue e destruição! O que deseja fazer?"
@@ -58,7 +73,10 @@ while executando:
                 fundo_escolhido = choice(fundos)
                 tela_luta.definir_imagem_fundo(fundo_escolhido)
             
-            estado_luta = choice([2,3,4,5])
+            if capitao.arma.nome in ["Desesperado", "Justiceiro", "Morte Súbita", "Ressurgente"]:
+                estado_luta = 5
+            else:
+                estado_luta = choice([2,3,4])
                 
         elif decisao_jogador == "Fugir":
             # Com o capitão
@@ -189,7 +207,6 @@ while executando:
                     capitao.arma.uso()
                     tela_principal = Tela(1200, 700, "LostTreasureIsland")
                     tela_principal.definir_imagem_fundo("images\PNG map.jpg")
-            
             
             
             ### Decida se quer continuar lutanto ou fugir

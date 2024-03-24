@@ -1,15 +1,15 @@
 from random import randint, choice
 from animacoes import Animacao
 
-class PlantaMedicial:
-    def __init__(self, nome, descricao, vertice, pontos_vida=25):
+class PlantaMedicinal:
+    def __init__(self, nome, descricao, vertice=None, pontos_vida=25):
         self.nome = nome
         self.descricao = descricao
         self.vertice = vertice
         self.pontos_vida = pontos_vida
     
 class Arma:
-    def __init__(self, nome, descricao, vertice, pontos_ataque, usos_maximos=1000):
+    def __init__(self, nome, descricao, pontos_ataque, vertice=None, usos_maximos=1000):
         self.nome = nome
         self.descricao = descricao
         self.pontos_ataque = pontos_ataque
@@ -132,6 +132,7 @@ class Personagem:
         # Auxiliares
         self.estado = 0
         self.em_batalha = False
+        self.arma_nova = False
         self.animacao = Animacao()
         self.lista_anim = []
     
@@ -149,9 +150,13 @@ class Personagem:
         
     def estado_atual(self):
         print(f"\nVida: {self.pontos_vida}")
-        print(f"Ataque: {self.pontos_ataque}")
-        print(f"Vidas restantes: {self.vidas_restantes}")
+        if self.arma != None:
+            print(f"Ataque: {self.arma.pontos_ataque}")
+            print(f"Usos restantes da arma: {self.arma.usos_restantes}")
+        else:
+            print(f"Ataque: {self.pontos_ataque}")
         print(f"Checkpoint atual: {self.checkpoint_atual}")
+        print(f"Vidas restantes: {self.vidas_restantes}")
         print(f"Tesouro: {self.tesouro}%")
         print(f"Caminho: {self.caminho}\n")
     
@@ -235,27 +240,40 @@ class Personagem:
             dano = randint(1, 10)
             print(f"Você encontrou um perigo. Perdeu {dano} pontos de vida. Tome cuidado!")
         
+        if any(event == "arma" for event in self.grafo.vertices[self.vertice].evento):
+            arma = [obj for obj in self.grafo.vertices[self.vertice].objeto if isinstance(obj, Arma)]
+            print(f"Que sorte! Você encontrou: {arma[0].nome}.")
+            print(f"{arma[0].descricao}")
+            self.arma_nova = True
+        
         if any(event == "plantaMedicinal" for event in self.grafo.vertices[self.vertice].evento):
-            print("Que sorte! Você encontrou uma planta medicianal.")
+            planta_med = [obj for obj in self.grafo.vertices[self.vertice].objeto if isinstance(obj, PlantaMedicinal)]
+            print(f"Que sorte! Você encontrou: {planta_med[0].nome}.")
+            print(f"{planta_med[0].descricao}")
             if self.pontos_vida < 100:
-                self.pontos_vida += 10
-                print("Você utilizou a planta para fazer um curativo e sua vida foi regenerada!")
+                self.pontos_vida += planta_med[0].pontos_vida
+                if self.pontos_vida > 100:
+                    self.pontos_vida = 100
+                print("Você utilizou utilizou como remédio para fazer um curativo e sua vida foi regenerada!")
             else:
-                print("No entanto, ela não lhe não lhe servirá de nada, pois você já está bem de vida. Sombra e água fresca.")
+                print("No entanto, não lhe não lhe servirá de nada, pois você já está bem de vida. Sombra e água fresca.")
                 
         if any(event == "monstro" for event in self.grafo.vertices[self.vertice].evento):
             print("Você encontrou um montro sedendo por sangue e destruição!")
             self.em_batalha = True
         
-        if self.vertice == 31 and (not self.tesouro):
+        if self.vertice == 31 and self.caminho[-1] == 31:
             self.caminho = self.grafo.dfs(31,0)
             self.ind_caminho = 0
             self.vertice = self.caminho[0]
             self.tesouro = self.pontos_vida - self.arma.pontos_ataque
             print("Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio.")
         
-        if self.tesouro and self.vertice == 0:
-            print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e não cometa a estupidez de retornar a esta ilha.")
+        if self.vertice == 0 and self.caminho[-1] == 0:
+            if self.tesouro:
+                print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha.")
+            else:
+                print("Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne.")
             self.fim_de_jogo()
         
         self.estado_atual()
