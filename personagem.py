@@ -9,8 +9,9 @@ class PlantaMedicinal:
         self.pontos_vida = pontos_vida
     
 class Arma:
-    def __init__(self, nome, descricao, pontos_ataque, vertice=None, usos_maximos=1000):
+    def __init__(self, nome, descricao, pontos_ataque, imagem, usos_maximos=1000,vertice=None):
         self.nome = nome
+        self.imagem = imagem
         self.descricao = descricao
         self.pontos_ataque = pontos_ataque
         self.usos_maximos = usos_maximos
@@ -123,17 +124,18 @@ class Personagem:
         # Referentes ao Capitão
         self.pontos_vida = pontos_vida
         self.menor_vida = 100
-        self.maior_ataque = self.pontos_ataque
         self.pontos_vida_maximos = pontos_vida
         self.vidas_restantes = 3
         self.tesouro = 0
         self.pontos_ataque = pontos_ataque
+        self.maior_ataque = self.pontos_ataque
         self.arma = None  
         
         # Auxiliares
         self.estado = 0
         self.em_batalha = False
         self.arma_nova = False
+        self.planta = False
         self.animacao = Animacao()
         self.lista_anim = []
     
@@ -141,6 +143,11 @@ class Personagem:
         self.ind_caminho += 1
         self.vertice = self.caminho[self.ind_caminho]
         self.arma.vertice = self.vertice
+        
+        if not self.tesouro:
+            self.menor_vida = self.pontos_vida
+            self.maior_ataque = self.pontos_ataque
+            
         self.transporta_tesouro()
         
         # Os montros devem se mover, também
@@ -181,8 +188,9 @@ class Personagem:
         if self.pontos_vida <= 0:
             self.pontos_vida = 0
         
-        if self.pontos_vida > 0 and self.pontos_vida < self.menor_vida:
-            self.menor_vida = self.pontos_vida  
+        if self.tesouro:
+            if self.pontos_vida > 0 and self.pontos_vida < self.menor_vida:
+                self.menor_vida = self.pontos_vida  
              
         if self.tesouro and self.pontos_vida > 0:
             self.transporta_tesouro()
@@ -196,14 +204,16 @@ class Personagem:
     def equipar_arma(self, arma):
         self.arma = arma
         self.pontos_ataque = self.arma.pontos_ataque
-        if self.pontos_ataque > self.maior_ataque:
-            self.maior_ataque = self.pontos_ataque
+        if self.tesouro:
+            if self.pontos_ataque > self.maior_ataque:
+                self.maior_ataque = self.pontos_ataque
         if self.tesouro != 0:
             self.transporta_tesouro()
 
     def desequipar_arma(self):
-        self.pontos_ataque = 0
         self.arma = None
+        arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", 20, imagem="images\GUI\Lâmina do Explorador.png", vertice=self.vertice)
+        self.equipar_arma(arma_inicial)
         
     def morte(self):
         self.vidas_restantes -= 1
@@ -251,6 +261,7 @@ class Personagem:
             self.arma_nova = True
         
         if any(event == "plantaMedicinal" for event in self.grafo.vertices[self.vertice].evento):
+            self.planta = True
             planta_med = [obj for obj in self.grafo.vertices[self.vertice].objeto if isinstance(obj, PlantaMedicinal)]
             print(f"Que sorte! Você encontrou: {planta_med[0].nome}.")
             print(f"{planta_med[0].descricao}")

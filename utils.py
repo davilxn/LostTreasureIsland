@@ -144,7 +144,7 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
 # De personagem
 def inicializa_capitao(grafo):
     capitao = Personagem(grafo=grafo)
-    arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", pontos_ataque=20, vertice=capitao.vertice)
+    arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", 20, imagem="images\GUI\Lâmina do Explorador.png", vertice=capitao.vertice)
     capitao.equipar_arma(arma_inicial)
     capitao_idle = carregar_frames("images\capitao\Idle-5frm.png", 5, espelhar=False)
     capitao_caminha = carregar_frames("images\capitao\Run-6frm.png", 6, espelhar=False)
@@ -242,31 +242,30 @@ def inicializa_criaturas(grafo):
 
 def inicializa_armas(grafo):
     descricao = "Uma espada lendária que brilha com poder místico. Dizem que corta através do destino dos inimigos."
-    arma1 = Arma("Espada do Destino", descricao, pontos_ataque=30)
+    arma1 = Arma("Espada do Destino", descricao ,pontos_ataque=30, imagem="images\GUI\Espada do Destino.png")
     
-    descricao = "Uma lâmina afiada forjada nas profundezas do vulcão, capaz de cortar através das escamas mais resistentes."
-    arma2 = Arma("Lâmina do Dragão", descricao, pontos_ataque=28)
+    descricao = "Uma espada afiada forjada nas profundezas do vulcão, capaz de cortar através das escamas mais resistentes."
+    arma2 = Arma("Espada do Dragão", descricao, pontos_ataque=28, imagem="images\GUI\Espada do Dragão.png")
     
-    descricao = "Forjada com aço puro e adornada com símbolos sagrados, esta espada é o símbolo da justiça implacável."
-    arma3 = Arma("Espada da Justiça", descricao, pontos_ataque=25)
+    descricao = "Forjada com aço puro e adornada com símbolos sagrados, esta lâmina é o símbolo da justiça implacável."
+    arma3 = Arma("Lâmina da Justiça", descricao, pontos_ataque=25, imagem="images\GUI\Lâmina da Justiça.png")
     
     descricao = "Uma katana elegante, envolta em sombras misteriosas. Seu golpe corta como uma lâmina afiada no crepúsculo."
-    arma4 = Arma("Katana do Crepúsculo", descricao, pontos_ataque=23)
+    arma4 = Arma("Katana do Crepúsculo", descricao, pontos_ataque=23, imagem="images\GUI\Katana do Crepúsculo.png")
     
     descricao = "Um revólver robusto com um cabo de madeira polida. Foi a arma de escolha de muitos fora da lei."
-    arma5 = Arma("Desesperado", descricao, pontos_ataque=35)
+    arma5 = Arma("Desesperado", descricao, pontos_ataque=35, imagem="images\GUI\Desesperado.png")
     
     descricao = "Uma pistola de precisão mítica com insígnias de justiça gravadas em seu cano. Seus tiros nunca erram o alvo."
-    arma6 = Arma("Justiceiro", descricao, pontos_ataque=32)
+    arma6 = Arma("Justiceiro", descricao, pontos_ataque=32, imagem="images\GUI\Justiceiro.png")
     
     descricao = "Um revólver sombrio como a noite, que sussurra promessas de morte ao disparar balas envenenadas."
-    arma7 = Arma("Morte Súbita", descricao, pontos_ataque=34)
+    arma7 = Arma("Morte Súbita", descricao, pontos_ataque=34, imagem="images\GUI\Morte Súbita.png")
     
     descricao = "Um revólver de aparência simples, mas com uma história de ressurgimento, sempre encontrando seu caminho de volta para as mãos de seu verdadeiro dono."
-    arma8 = Arma("Ressurgente", descricao, pontos_ataque=31)
+    arma8 = Arma("Ressurgente", descricao, pontos_ataque=31, imagem="images\GUI\Ressurgente.png")
     
     lista_armas = [arma1, arma2, arma3, arma4, arma5, arma6, arma7, arma8]
-    
     return lista_armas
 
 def inicializa_remedios(grafo):

@@ -71,6 +71,23 @@ class Tela:
         self.tela.blit(pts_ataque_renderizado, (local_y, 2*local_x))
         self.tela.blit(info, (local_y, local_x))
     
+    def desenhar_arma(self, imagem, usos_restantes, local_y=600, local_x=25, cor_texto=(255, 255, 255)):
+        imagem_core = pg.image.load(imagem)
+        self.desenhar_elemento(imagem_core,(local_y,local_x))
+        fonte2 = pg.font.Font(None, 20)
+        info = fonte2.render(str(usos_restantes), True,cor_texto)
+        self.tela.blit(info, (local_y, local_x-10))
+
+
+    def desenhar_tesouro(self, por_tesouro, local_y=670, local_x=25, cor_texto=(255, 255, 255)):
+        imagem_core = pg.image.load("images\GUI\Bau do Tesouro.png")
+        self.desenhar_elemento(imagem_core,(local_y,local_x))
+        fonte2 = pg.font.Font(None, 20)
+        info = fonte2.render(str(por_tesouro), True,cor_texto)
+        self.tela.blit(info, (local_y, local_x-10))
+
+
+
     def desenhar_coracao(self, num_core, local_y=750, local_x=30):
         i = 0
         while num_core != 0:

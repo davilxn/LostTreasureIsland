@@ -1,7 +1,7 @@
 from grafo import Grafo
 from interface import Tela
 from random import choice
-from personagem import Criatura, Arma
+from personagem import Criatura, Arma, PlantaMedicinal
 import pygame as pg
 from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
 
@@ -40,6 +40,10 @@ while executando:
         
         elif evento.type == pg.MOUSEBUTTONDOWN:
             capitao.mover()
+        elif evento.type == pg.KEYDOWN:
+            if evento.key == pg.K_SPACE:
+                capitao.desequipar_arma()
+                print("Você desequipou sua arma atual.")
     
     if capitao.arma_nova:
         arma = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, Arma)]
@@ -59,6 +63,45 @@ while executando:
             
         capitao.arma_nova = False
         decisao_jogador = None
+        
+        # Limpa e atualiza a tela
+        tela_principal.limpar_tela()
+        tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
+        tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
+        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
+        tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
+        tela_principal.desenhar_tesouro(capitao.tesouro)
+        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
+        tela_principal.atualizar_tela()
+
+    if capitao.planta:
+        planta = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, PlantaMedicinal)]
+        mensagem = f"Que sorte! Você encontrou: {planta[0].nome}.\n{planta[0].descricao}"
+        if capitao.pontos_vida < 100:
+            capitao.pontos_vida += planta[0].pontos_vida
+            if capitao.pontos_vida > 100:
+                capitao.pontos_vida = 100
+                mensagem += "Você utilizou utilizou como remédio para fazer um curativo e sua vida foi regenerada!"
+            else:
+                mensagem += "No entanto, não lhe não lhe servirá de nada, pois você já está bem de vida. Sombra e água fresca."
+        
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.atualizar_tela()
+        pg.time.delay(2000)
+
+        capitao.planta = False
+        
+        # Limpa e atualiza a tela
+        tela_principal.limpar_tela()
+        tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
+        tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
+        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
+        tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
+        tela_principal.desenhar_tesouro(capitao.tesouro)
+        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
+        tela_principal.atualizar_tela()
         
           
     if capitao.em_batalha and not batalha:
@@ -275,6 +318,8 @@ while executando:
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
         tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
         tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
+        tela_principal.desenhar_tesouro(capitao.tesouro)
         tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
         tela_principal.atualizar_tela()
          
@@ -284,3 +329,9 @@ pg.quit()
 ### Área de comentários e observações
 
 # Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.
+# Dar descrição para os monstros
+# Botar os perigos em prática
+# Fundo pra as mensagens
+# Aparecer fundo nas informações do personagem
+# Morte, checkpoint e tesouro
+# Mostrar frutinhas
