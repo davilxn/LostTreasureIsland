@@ -9,8 +9,9 @@ class PlantaMedicinal:
         self.pontos_vida = pontos_vida
     
 class Arma:
-    def __init__(self, nome, descricao, pontos_ataque, vertice=None, usos_maximos=1000):
+    def __init__(self, nome, descricao, pontos_ataque, imagem, usos_maximos=1000,vertice=None):
         self.nome = nome
+        self.imagem = imagem
         self.descricao = descricao
         self.pontos_ataque = pontos_ataque
         self.usos_maximos = usos_maximos

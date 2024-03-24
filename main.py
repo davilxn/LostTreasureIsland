@@ -275,6 +275,8 @@ while executando:
         tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
         tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
         tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
+        tela_principal.desenhar_tesouro(capitao.tesouro)
         tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
         tela_principal.atualizar_tela()
          
