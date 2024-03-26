@@ -55,7 +55,7 @@ class Tela:
             
             self.tela.blit(texto_renderizado, (pos_x, pos_y))
     
-    def desenhar_botao(self, texto, posicao, tamanho=(150, 50), cor_fundo=(255, 197, 121), cor_texto=(101, 58, 26)):
+    def desenhar_botao(self, texto, posicao, tamanho=(150, 50), cor_fundo=(228,166,114), cor_texto=(101, 58, 26)):
         pg.draw.rect(self.tela, cor_fundo, (posicao[0] + 60, posicao[1] + 80, tamanho[0], tamanho[1]))
         fonte = pg.font.Font(None, 30)
         texto_renderizado = fonte.render(texto, True, cor_texto)
