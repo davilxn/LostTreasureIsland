@@ -145,7 +145,9 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
 def inicializa_capitao(grafo):
     capitao = Personagem(grafo=grafo)
     arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", 20, imagem="images\GUI\Lâmina do Explorador.png", vertice=capitao.vertice)
-    capitao.equipar_arma(arma_inicial)
+    capitao.arma_inicial = arma_inicial
+    capitao.arma = arma_inicial
+    capitao.pontos_ataque = capitao.arma.pontos_ataque
     capitao_idle = carregar_frames("images\capitao\Idle-5frm.png", 5, espelhar=False)
     capitao_caminha = carregar_frames("images\capitao\Run-6frm.png", 6, espelhar=False)
     capitao_ataca1 = carregar_frames("images\capitao\Atk1-6frm.png", 6, espelhar=False)

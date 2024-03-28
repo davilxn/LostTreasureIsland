@@ -1,11 +1,11 @@
 from grafo import Grafo
 from interface import Tela
-from random import choice
+from random import choice, randint
 from personagem import Criatura, Arma, PlantaMedicinal
 import pygame as pg
 from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
 
-#definindo função de sobreposição de mensagem
+# Definindo função de sobreposição de mensagem
 def sobreMens():
     # Limpa e atualiza a tela
         tela_principal.limpar_tela()
@@ -42,7 +42,7 @@ batalha, checkpoint, tesouro = False, False, False
 decisao_jogador = None
 ctrl_anim = 0
 turno_capitao, turno_monstro, vez = False, False, False
-estado_luta = None
+estado_luta = choice([2, 3, 4])
 turno, turno_anterior = 0, 0
 
 # Loop principal
@@ -63,7 +63,7 @@ while executando:
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Bau do Tesouro.png"),(80,80)), (210,420))
         tela_principal.atualizar_tela()
-        pg.time.delay(2000)
+        pg.time.delay(5000)
 
         capitao.encontrou_tesouro = False
 
@@ -74,21 +74,37 @@ while executando:
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Sombra e Água Fresca.png"),(80,80)), (210,420))
         tela_principal.atualizar_tela()
-        pg.time.delay(2000)
+        pg.time.delay(3500)
 
         capitao.em_checkpoint = False
 
         sobreMens()
 
 
-    # capitão achou um perigo
+    # Capitão achou um perigo
     if capitao.em_perigo != None:
         perigo = capitao.em_perigo
-        mensagem = f"EITA! Você encontrou um(a): {perigo} Dada as circunstancias você acabou tomando certo dano de vida."
+        mensagem = ''
+        if perigo == "Areia movediça":
+            mensagem += "Você caiu numa área de areia movediça e lutou pra escapar. Cuidado, Indiana Jones. "
+        if perigo == "Floresta dos sussuros":
+            mensagem += "Você encontrou a Floresta dos Sussurros. Diz a lenda que aqui, o vento carrega vozes que enlouquecem até os mais bravos aventureiros. "
+        if perigo == "Vulcão":
+            mensagem += "Não sou o bola de fogo, mas o calor tá de matar. Você encontrou um vulcão em erupção, e não conseguiu correr antes de conseguir umas queimaduras. "
+        if perigo == "Poço de cobras":
+            mensagem += "'Tem uma cobra na minha bota.' Você encontrou um poço de cobras, e foi picado, cowboy. "
+        if perigo == "Chuva de cocô dos pombos do Norte":
+            mensagem += "Dos perigos desta ilha, o mais mortal: Você foi atingido por cocô do Pombos do Norte. Estes infames destroem tudo o que vêem, sem piedade ou remorso. "
+        if perigo == "Pântano do Zé Jacaré":   
+            mensagem += "Bem-vindo a um dos Pântanos do Zé Jacaré, um jacaré com coração de lagartixa e muita fome. Você atravessou, mas quase virou petisco. "
+            
+        dano = randint(1, 10)
+        capitao.receber_dano(dano)
+        mensagem += f"Você perdeu {dano} pontos de vida."
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Perigo.png"),(80,80)), (210,420))
         tela_principal.atualizar_tela()
-        pg.time.delay(2000)
+        pg.time.delay(10000)
 
         capitao.em_perigo = None
 
@@ -106,7 +122,7 @@ while executando:
         capitao.fim_de_jogo()
 
     if capitao.em_morte:
-        mensagem = f"Você morreu! Tente novamente concluir a expedição."
+        mensagem = f"Você morreu. Tente novamente, aventureiro."
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\jogo termina.png"),(80,80)), (210,420))
         tela_principal.atualizar_tela()
@@ -118,7 +134,7 @@ while executando:
 
     if capitao.arma_nova:
         arma = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, Arma)]
-        mensagem = f"Que sorte! Você encontrou: {arma[0].nome}.\n{arma[0].descricao} Deseja trocar de arma ou manter a arma atual?"
+        mensagem = f"Que sorte! Você encontrou: {arma[0].nome}. {arma[0].descricao}. Deseja trocar de arma ou manter a arma atual?"
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_botao("Manter", (50, 400))
         tela_principal.desenhar_botao("Trocar", (250, 400))
@@ -152,7 +168,7 @@ while executando:
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load(planta[0].imagem),(80,80)), (210,420))
         tela_principal.atualizar_tela()
-        pg.time.delay(2000)
+        pg.time.delay(5000)
 
         capitao.planta = False
         

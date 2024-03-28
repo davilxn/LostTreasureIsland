@@ -132,6 +132,7 @@ class Personagem:
         self.pontos_ataque = pontos_ataque
         self.maior_ataque = self.pontos_ataque
         self.arma = None  
+        self.arma_inicial = None
         
         # Auxiliares
         self.estado = 0
@@ -209,8 +210,16 @@ class Personagem:
             self.pontos_vida = self.pontos_vida_maximos
 
     def equipar_arma(self, arma):
+        self.desequipar_arma()
+        if self.arma == self.arma_inicial:
+            self.grafo.vertices[self.vertice].evento.remove("arma")
+        
+        # Retirando a arma do vértice     
+        self.grafo.vertices[self.vertice].objeto.remove(arma)
+        
         self.arma = arma
         self.pontos_ataque = self.arma.pontos_ataque
+            
         if self.tesouro:
             if self.pontos_ataque > self.maior_ataque:
                 self.maior_ataque = self.pontos_ataque
@@ -218,9 +227,18 @@ class Personagem:
             self.transporta_tesouro()
 
     def desequipar_arma(self):
+        if not any(event == "arma" for event in self.grafo.vertices[self.vertice].evento) and self.arma != self.arma_inicial:
+            self.grafo.vertices[self.vertice].evento.append("arma")
+            self.grafo.vertices[self.vertice].objeto.append(self.arma)  
+        
+        elif not any(event == "arma" for event in self.grafo.vertices[self.vertice].evento) and self.arma == self.arma_inicial:
+            pass
+            
+        elif any(event == "arma" for event in self.grafo.vertices[self.vertice].evento) and self.arma != self.arma_inicial:
+            self.grafo.vertices[self.vertice].objeto.append(self.arma) 
+            
         self.arma = None
-        arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", 20, imagem="images\GUI\Lâmina do Explorador.png", vertice=self.vertice)
-        self.equipar_arma(arma_inicial)
+        self.arma = self.arma_inicial 
         
     def morte(self):
         self.em_morte = True
@@ -228,26 +246,11 @@ class Personagem:
         if self.vidas_restantes == 0:
             self.fim_de_jogo()
         else:
-            if self.checkpoint_atual == 0 and self.caminho[-1] == 31:
-                self.pontos_vida = self.pontos_vida_maximos
-                self.vertice = self.checkpoint_atual
-                self.tesouro = 0
-            
-            if self.checkpoint_atual != 0 and self.caminho[-1] == 31:
+            if self.checkpoint_atual != 0:
                 self.pontos_vida = self.pontos_vida_maximos
                 self.vertice = self.checkpoint_atual
                 self.grafo.vertices[self.vertice].evento = 'none'
                 self.checkpoint_atual = 0
-                
-            if self.checkpoint_atual == 31 and self.caminho[-1] == 0:
-                self.pontos_vida = self.pontos_vida_maximos
-                self.vertice = self.checkpoint_atual
-            
-            if self.checkpoint_atual != 31 and self.caminho[-1] == 0:
-                self.pontos_vida = self.pontos_vida_maximos
-                self.vertice = self.checkpoint_atual
-                self.grafo.vertices[self.vertice].evento = 'none'
-                self.checkpoint_atual = 31
             
             else:
                 self.pontos_vida = self.pontos_vida_maximos
@@ -290,7 +293,6 @@ class Personagem:
                     self.em_perigo = event   
 
             dano = randint(1, 10)
-            self.pontos_vida -= dano
             print(f"Você encontrou um perigo. Perdeu {dano} pontos de vida. Tome cuidado!")
         
         if any(event == "arma" for event in self.grafo.vertices[self.vertice].evento):
