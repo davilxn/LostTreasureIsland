@@ -220,11 +220,26 @@ class Personagem:
         if self.vidas_restantes == 0:
             self.fim_de_jogo()
         else:
-            if self.checkpoint_atual != 0:
+            if self.checkpoint_atual == 0 and self.caminho[-1] == 31:
+                self.pontos_vida = self.pontos_vida_maximos
+                self.vertice = self.checkpoint_atual
+                self.tesouro = 0
+            
+            if self.checkpoint_atual != 0 and self.caminho[-1] == 31:
                 self.pontos_vida = self.pontos_vida_maximos
                 self.vertice = self.checkpoint_atual
                 self.grafo.vertices[self.vertice].evento = 'none'
                 self.checkpoint_atual = 0
+                
+            if self.checkpoint_atual == 31 and self.caminho[-1] == 0:
+                self.pontos_vida = self.pontos_vida_maximos
+                self.vertice = self.checkpoint_atual
+            
+            if self.checkpoint_atual != 31 and self.caminho[-1] == 0:
+                self.pontos_vida = self.pontos_vida_maximos
+                self.vertice = self.checkpoint_atual
+                self.grafo.vertices[self.vertice].evento = 'none'
+                self.checkpoint_atual = 31
             
             else:
                 self.pontos_vida = self.pontos_vida_maximos
