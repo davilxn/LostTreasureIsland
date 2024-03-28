@@ -2,8 +2,9 @@ from random import randint, choice
 from animacoes import Animacao
 
 class PlantaMedicinal:
-    def __init__(self, nome, descricao, vertice=None, pontos_vida=25):
+    def __init__(self, nome, descricao, imagem, vertice=None, pontos_vida=25):
         self.nome = nome
+        self.imagem = imagem
         self.descricao = descricao
         self.vertice = vertice
         self.pontos_vida = pontos_vida
@@ -29,8 +30,9 @@ class Arma:
         return False
 
 class Criatura:
-    def __init__(self, grafo, vertice=None, pontos_vida=100, pontos_ataque=20):
+    def __init__(self, grafo, descricao, vertice=None, pontos_vida=100, pontos_ataque=20):
         self.grafo = grafo
+        self.descricao = descricao
         self.vertice = vertice
         self.pontos_vida = pontos_vida
         self.pontos_vida_maximos = pontos_vida
@@ -136,6 +138,11 @@ class Personagem:
         self.em_batalha = False
         self.arma_nova = False
         self.planta = False
+        self.em_perigo = None
+        self.encontrou_tesouro = False
+        self.em_termino_exploracao = None
+        self.em_morte = False
+        self.em_checkpoint = False
         self.animacao = Animacao()
         self.lista_anim = []
     
@@ -216,6 +223,7 @@ class Personagem:
         self.equipar_arma(arma_inicial)
         
     def morte(self):
+        self.em_morte = True
         self.vidas_restantes -= 1
         if self.vidas_restantes == 0:
             self.fim_de_jogo()
@@ -263,10 +271,26 @@ class Personagem:
     def interacao_vertice(self):
         if any(event == "checkpoint" for event in self.grafo.vertices[self.vertice].evento):
             print("Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se.")
+            self.em_checkpoint = True
             self.checkpoint_atual = self.vertice
         
-        if any(event == "areiaMovedica" or event == "florestaPerigosa" for event in self.grafo.vertices[self.vertice].evento):
+        if any(event == "Areia movediça" or event == "Floresta dos sussuros" or event == "Vulcão" or event == "Poço de cobras" or event == "Chuva de cocô dos pombos do Norte" or event == "Pântano do Zé Jacaré" for event in self.grafo.vertices[self.vertice].evento):
+            for event in self.grafo.vertices[self.vertice].evento:
+                if event == "Areia movediça":
+                    self.em_perigo = event
+                if event == "Floresta dos sussuros":
+                    self.em_perigo = event
+                if event == "Vulcão":
+                    self.em_perigo = event
+                if event == "Poço de cobras":
+                    self.em_perigo = event
+                if event == "Chuva de cocô dos pombos do Norte":
+                    self.em_perigo = event
+                if event == "Pântano do Zé Jacaré":
+                    self.em_perigo = event   
+
             dano = randint(1, 10)
+            self.pontos_vida -= dano
             print(f"Você encontrou um perigo. Perdeu {dano} pontos de vida. Tome cuidado!")
         
         if any(event == "arma" for event in self.grafo.vertices[self.vertice].evento):
@@ -297,14 +321,16 @@ class Personagem:
             self.ind_caminho = 0
             self.vertice = self.caminho[0]
             self.tesouro = self.pontos_vida - self.arma.pontos_ataque
+            self.encontrou_tesouro = True
             print("Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio.")
         
         if self.vertice == 0 and self.caminho[-1] == 0:
             if self.tesouro:
+                self.em_termino_exploracao = "Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha."
                 print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha.")
             else:
+                self.em_termino_exploracao = "Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne."
                 print("Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne.")
-            self.fim_de_jogo()
         
         self.estado_atual()
         

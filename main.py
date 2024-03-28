@@ -5,6 +5,19 @@ from personagem import Criatura, Arma, PlantaMedicinal
 import pygame as pg
 from utils import inicializa_grafo, mover_em_linha_reta, inicializa_capitao
 
+#definindo função de sobreposição de mensagem
+def sobreMens():
+    # Limpa e atualiza a tela
+        tela_principal.limpar_tela()
+        tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
+        tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
+        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
+        tela_principal.desenhar_coracao(capitao.vidas_restantes)
+        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
+        tela_principal.desenhar_tesouro(capitao.tesouro)
+        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
+        tela_principal.atualizar_tela()
+
 # As telas
 tela_principal = Tela(1200, 700, "LostTreasureIsland")
 tela_principal.definir_imagem_fundo("images\PNG map.jpg")
@@ -45,6 +58,64 @@ while executando:
                 capitao.desequipar_arma()
                 print("Você desequipou sua arma atual.")
     
+    if capitao.encontrou_tesouro:
+        mensagem = f"Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio."
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Bau do Tesouro.png"),(80,80)), (210,420))
+        tela_principal.atualizar_tela()
+        pg.time.delay(2000)
+
+        capitao.encontrou_tesouro = False
+
+        sobreMens()
+
+    if capitao.em_checkpoint:
+        mensagem = "Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se."
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Sombra e Água Fresca.png"),(80,80)), (210,420))
+        tela_principal.atualizar_tela()
+        pg.time.delay(2000)
+
+        capitao.em_checkpoint = False
+
+        sobreMens()
+
+
+    # capitão achou um perigo
+    if capitao.em_perigo != None:
+        perigo = capitao.em_perigo
+        mensagem = f"EITA! Você encontrou um(a): {perigo} Dada as circunstancias você acabou tomando certo dano de vida."
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Perigo.png"),(80,80)), (210,420))
+        tela_principal.atualizar_tela()
+        pg.time.delay(2000)
+
+        capitao.em_perigo = None
+
+        sobreMens()
+
+    if capitao.em_termino_exploracao != None:
+        mensagem = capitao.em_termino_exploracao
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\jogo termina.png"),(80,80)), (210,420))
+        tela_principal.atualizar_tela()
+        pg.time.delay(5000)
+
+        capitao.em_termino_exploracao = None
+
+        capitao.fim_de_jogo()
+
+    if capitao.em_morte:
+        mensagem = f"Você morreu! Tente novamente concluir a expedição."
+        tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\jogo termina.png"),(80,80)), (210,420))
+        tela_principal.atualizar_tela()
+        pg.time.delay(5000)
+
+        capitao.em_morte = False
+
+        sobreMens()
+
     if capitao.arma_nova:
         arma = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, Arma)]
         mensagem = f"Que sorte! Você encontrou: {arma[0].nome}.\n{arma[0].descricao} Deseja trocar de arma ou manter a arma atual?"
@@ -53,7 +124,7 @@ while executando:
         tela_principal.desenhar_botao("Trocar", (250, 400))
         tela_principal.atualizar_tela()
 
-        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450), "Manter", "Trocar")
+        decisao_jogador = tela_principal.aguardar_clique_botao((50+60, 200+80, 400+80, 450+60), (250+60, 400+80, 400+80, 450+60), "Manter", "Trocar")
         if decisao_jogador == "Trocar":
             capitao.equipar_arma(arma[0])
         if capitao.arma.nome in ["Desesperado", "Justiceiro", "Morte Súbita", "Ressurgente"]:
@@ -64,16 +135,8 @@ while executando:
         capitao.arma_nova = False
         decisao_jogador = None
         
-        # Limpa e atualiza a tela
-        tela_principal.limpar_tela()
-        tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
-        tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
-        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
-        tela_principal.desenhar_coracao(capitao.vidas_restantes)
-        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
-        tela_principal.desenhar_tesouro(capitao.tesouro)
-        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
-        tela_principal.atualizar_tela()
+        sobreMens()
+
 
     if capitao.planta:
         planta = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, PlantaMedicinal)]
@@ -87,21 +150,13 @@ while executando:
                 mensagem += "No entanto, não lhe não lhe servirá de nada, pois você já está bem de vida. Sombra e água fresca."
         
         tela_principal.exibir_mensagem(mensagem, (200, 350))
+        tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load(planta[0].imagem),(80,80)), (210,420))
         tela_principal.atualizar_tela()
         pg.time.delay(2000)
 
         capitao.planta = False
         
-        # Limpa e atualiza a tela
-        tela_principal.limpar_tela()
-        tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
-        tela_principal.desenhar_elemento(capitao.animacao.obter_frame_atual(), (capitao.x, capitao.y))
-        tela_principal.desenhar_vida(capitao.pontos_vida,1028,15)
-        tela_principal.desenhar_coracao(capitao.vidas_restantes)
-        tela_principal.desenhar_arma(capitao.arma.imagem,capitao.arma.usos_restantes)
-        tela_principal.desenhar_tesouro(capitao.tesouro)
-        tela_principal.desenhar_ataquepts(capitao.pontos_ataque,900,15)
-        tela_principal.atualizar_tela()
+        sobreMens()
         
           
     if capitao.em_batalha and not batalha:
@@ -111,7 +166,7 @@ while executando:
         tela_principal.desenhar_botao("Fugir", (250, 400))
         tela_principal.atualizar_tela()
 
-        decisao_jogador = tela_principal.aguardar_clique_botao((50, 200, 400, 450), (250, 400, 400, 450), "Lutar", "Fugir")
+        decisao_jogador = tela_principal.aguardar_clique_botao((50+60, 200+80, 400+80, 450+60), (250+60, 400+80, 400+80, 450+60), "Lutar", "Fugir")
         
         if decisao_jogador == "Lutar":
             batalha = True
@@ -255,12 +310,12 @@ while executando:
             ### Decida se quer continuar lutanto ou fugir
             if turno_anterior != turno:
                 mensagem = "Você pode continuar lutando ou fugir para viver e lutar mais um dia."
-                tela_luta.exibir_mensagem(mensagem, (50, 140))
-                tela_luta.desenhar_botao("Lutar", (100, 165))
-                tela_luta.desenhar_botao("Fugir", (400, 165))
+                tela_luta.exibir_mensagem(mensagem, (50, 140),red=True)
+                tela_luta.desenhar_botao("Lutar", (100-60, 165-80))
+                tela_luta.desenhar_botao("Fugir", (400-60, 165-80))
                 tela_luta.atualizar_tela()
 
-                decisao_jogador = tela_luta.aguardar_clique_botao((100, 350, 165, 215), (400, 550, 165, 215), "Lutar", "Fugir")
+                decisao_jogador = tela_luta.aguardar_clique_botao((100, 350, 165, 215), (400, 550, 165, 215), "Lutar", "Fugir"  )
                 
                 if decisao_jogador == "Lutar":
                     pass
@@ -328,10 +383,3 @@ pg.quit()
 
 ### Área de comentários e observações
 
-# Dar descrições para todos os itens e todos os monstros. Ver também o negócio das cartinhas com itens e monstros.
-# Dar descrição para os monstros
-# Botar os perigos em prática
-# Fundo pra as mensagens
-# Aparecer fundo nas informações do personagem
-# Morte, checkpoint e tesouro
-# Mostrar frutinhas

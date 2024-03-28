@@ -158,8 +158,8 @@ def inicializa_capitao(grafo):
     capitao.lista_anim = [capitao_idle, capitao_caminha, capitao_ataca1, capitao_ataca2, capitao_ataca3, capitao_ataca4, capitao_dano, capitao_morre]
     return capitao
 
-def inicializa_criatura(grafo, sprites, espelhar, vertical=False, x_luta=0, y_luta=0):
-    monstro = Criatura(grafo=grafo)
+def inicializa_criatura(grafo, sprites, espelhar, descricao,vertical=False, x_luta=0, y_luta=0):
+    monstro = Criatura(grafo,descricao)
     monstro.x_luta, monstro.y_luta = x_luta, y_luta
     monstro_idle = carregar_frames(sprites[0][0], sprites[0][1], espelhar=espelhar, vertical=vertical)
     monstro_ataca = carregar_frames(sprites[1][0], sprites[1][1], espelhar=espelhar, vertical=vertical)
@@ -224,18 +224,18 @@ def inicializa_criaturas(grafo):
     
     
     # Opções extra
-    jacob = inicializa_criatura(grafo, sprites1, False)
-    oscar = inicializa_criatura(grafo, sprites2, True)
-    sapovski = inicializa_criatura(grafo, sprites3, True)
-    dona_morte = inicializa_criatura(grafo, sprites4, False, x_luta=350, y_luta=155)
-    magrelo = inicializa_criatura(grafo, sprites5, True)
+    jacob = inicializa_criatura(grafo, sprites1, False, "")
+    oscar = inicializa_criatura(grafo, sprites2, True, "")
+    sapovski = inicializa_criatura(grafo, sprites3, True, "")
+    dona_morte = inicializa_criatura(grafo, sprites4, False, "Aquela que todos vão encontrar, sempre perpasseia pela ilha devido a quantidade de mortos tornando-a assim um lugar preferido por ela.", x_luta=350, y_luta=155)
+    magrelo = inicializa_criatura(grafo, sprites5, True, "")
     
     # Monstros
-    mr_eucalipto = inicializa_criatura(grafo, sprites6, True, True, x_luta=350, y_luta=145)
-    master_magrelo = inicializa_criatura(grafo, sprites7, True, True, x_luta=350, y_luta=85)
-    hidra_magrela = inicializa_criatura(grafo, sprites8, True, True, x_luta=350, y_luta=120)
-    lagartixolem = inicializa_criatura(grafo, sprites9, False, True, x_luta=350, y_luta=100)
-    barata_militar = inicializa_criatura(grafo, sprites10, True, True, x_luta=350, y_luta=135)
+    mr_eucalipto = inicializa_criatura(grafo, sprites6, True, "Dentro da floresta dos sussurros reside uma criatura como um tronco de uma árvore com multiplos olhos a espreita." , True, x_luta=350, y_luta=145)
+    master_magrelo = inicializa_criatura(grafo, sprites7, True, "Um antigo explorador da ilha que é invocado quando novos chegam, seu corpo está em decomposição e ele usa sua pá com uma força sobre-humana", True, x_luta=350, y_luta=85)
+    hidra_magrela = inicializa_criatura(grafo, sprites8, True, "Uma entidade que incorpora os ossos daqueles que morreram na ilha, ela vagueia buscando mais carne para alimentar sua sede de sangue.", True, x_luta=350, y_luta=120)
+    lagartixolem = inicializa_criatura(grafo, sprites9, False, "Um reptiliano pedregoso vindo dos pantanos, muitos dizem que ele é uma mutação, já outros falam de magia antiga da ilha. ", True, x_luta=350, y_luta=100)
+    barata_militar = inicializa_criatura(grafo, sprites10, True, "Um inseto desevolto vindo das cavernas profundas da ilha, muitos dizem que ele é uma mutação, já outros falam de magia antiga da ilha.", True, x_luta=350, y_luta=135)
     
     monstros = [dona_morte, mr_eucalipto, master_magrelo, hidra_magrela, lagartixolem, barata_militar]
     return monstros
@@ -270,28 +270,28 @@ def inicializa_armas(grafo):
 
 def inicializa_remedios(grafo):
     descricao = "Uma folha verde exuberante encontrada apenas nas profundezas da selva da ilha, conhecida por suas propriedades curativas naturais."
-    med1 = PlantaMedicinal("Folha de Cura Tropical", descricao, pontos_vida=12)
+    med1 = PlantaMedicinal("Folha de Cura Tropical", descricao, "images\GUI\Folha de Cura Tropical.png", pontos_vida=12)
     
     descricao = "Uma fruta suculenta e colorida encontrada pendurada nos galhos das árvores frondosas da ilha, conhecida por rejuvenescer os que a consomem."
-    med2 = PlantaMedicinal("Fruta da Vitalidade", descricao, pontos_vida=15)
+    med2 = PlantaMedicinal("Fruta da Vitalidade", descricao, "images\GUI\Fruta da Vitalidade.png", pontos_vida=15)
     
     descricao = "Um tônico preparado com raízes selvagens colhidas nas profundezas da ilha, que proporciona um impulso de energia instantâneo e revitaliza o corpo."
-    med3 = PlantaMedicinal("Tônico de Raízes Selvagens", descricao, pontos_vida=18)
+    med3 = PlantaMedicinal("Tônico de Raízes Selvagens", descricao, "images\GUI\Tonico de Raizes Selvagens.png", pontos_vida=18)
     
     descricao = "Uma flor delicada e perfumada que floresce apenas em certos recantos secretos da ilha, conhecida por suas propriedades calmantes e de cura."
-    med4 = PlantaMedicinal("Flor da Serenidade", descricao, pontos_vida=21)
+    med4 = PlantaMedicinal("Flor da Serenidade", descricao, "images\GUI\Flor da Serenidade.png", pontos_vida=21)
     
     descricao = "Um extrato concentrado obtido dos cactos que prosperam sob o sol escaldante da ilha, com propriedades que revigoram e restauram a vitalidade."
-    med5 = PlantaMedicinal("Extrato de Cacto Solar", descricao, pontos_vida=24)
+    med5 = PlantaMedicinal("Extrato de Cacto Solar", descricao, "images\GUI\Extrato de Cacto Solar.png", pontos_vida=24)
     
     descricao = "Uma bebida doce e refrescante feita com o néctar das flores exóticas que enfeitam a paisagem da ilha, conhecida por seu poder de cura instantâneo."
-    med6 = PlantaMedicinal("Bebida de Néctar Floral", descricao, pontos_vida=27)
+    med6 = PlantaMedicinal("Bebida de Néctar Floral", descricao, "images/GUI/Bebida de Nectar Floral.png", pontos_vida=27)
     
     descricao = "Um bálsamo feito com as lágrimas cristalinas das sereias que habitam as águas ao redor da ilha, com propriedades curativas lendárias."
-    med7 = PlantaMedicinal("Bálsamo de Lágrimas de Sereia", descricao, pontos_vida=30)
+    med7 = PlantaMedicinal("Bálsamo de Lágrimas de Sereia", descricao, "images\GUI\Bálsamo de Lágrimas de Sereia.png", pontos_vida=30)
     
     descricao = "Enquanto o derivado dos temidos Pombos do Norte o atingem como granizo ácido em tempestades mortais, este o impacta com a maciez da chuva leve e o calor suave do verão sereno."
-    med8 = PlantaMedicinal("Cocô dos Pombos do Sul", descricao, pontos_vida=50)
+    med8 = PlantaMedicinal("Cocô dos Pombos do Sul", descricao, "images\GUI\Cocô dos Pombos do Sul.png",pontos_vida=50)
     
     lista_meds = [med1, med2, med3, med4, med5, med6, med7, med8]
     return lista_meds
