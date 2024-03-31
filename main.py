@@ -176,6 +176,10 @@ while executando:
         
           
     if capitao.em_batalha and not batalha:
+        """
+        Se o capitão chega a um vértice que possui monstro, séra perguntado se ele deseja fugir ou lutar. Caso deseje lutar, será criada
+        a tela de luta, e o Capitão entra em combate com o monstro em questão.
+        """
         mensagem = "Você encontrou um monstro sedento por sangue e destruição! O que deseja fazer?"
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_botao("Lutar", (50, 400))
@@ -193,6 +197,13 @@ while executando:
                 tela_luta.definir_imagem_fundo(fundo_escolhido)
                 
         elif decisao_jogador == "Fugir":
+            """
+            Caso contrário, isto é, decida fugir, o Capitão sairá da luta tendo tomado o dano de ataque máximo do monstro. Em seguida é feita a 
+            verificação que indica se, após tomar dano, o capitão morreu ou não, chamando a função "morte", em caso afirmativo.
+            
+            As variáveis de controle de luta "batalha" (que verifica se o capitão vai lutar) "capitao.em_batalha" (que verifica se o capitão
+            encontrou um vértice que possui monstro) e "decisao_jogador" (que armazena a decisão tomada sobre a luta) são atualizadas.
+            """
             # Com o capitão
             batalha = False
             monstro = None
@@ -208,14 +219,17 @@ while executando:
             # Com a tela
             tela_principal.limpar_tela()
             tela_principal.desenhar_elemento(tela_principal.imagem_fundo, (0,0))
-            mensagem = f"Você fugiu da criatura, mas antes que conseguisse, foi atingido com um golpe raspão. Perdeu {dano} pontos de vida."
-            tela_principal.exibir_mensagem(mensagem, (200, 350))
             tela_principal.atualizar_tela()
-            #pg.time.delay(5000)
             
         decisao_jogador = None
 
     if batalha: 
+        """
+        Caso a decisão seja a de lutar, o monstro será buscado na lista de objetos do vértice. Serão carregadas as telas e as imagens do 
+        Capitão e do monstro, assim como suas animações. Este trecho inicial faz com que, por alguns segundos, o Capitão e o monstro 
+        mantenham as animações de parada (idle), antes dos ataques começarem.
+        Esse tempo é manipulado através da variável de controle "ctrl_anim".
+        """
         monstro = None
         for obj in capitao.grafo.vertices[capitao.vertice].objeto:
             if isinstance(obj, Criatura):
@@ -238,14 +252,24 @@ while executando:
             ctrl_anim += 1
             if ctrl_anim == fps*max(len(capitao.lista_anim[0]), len(monstro.lista_anim[0])):
                 turno_capitao = True
-                ctrl_anim += 10000000000
+                ctrl_anim += 10000000000    # Gambiarra necessária por motivos desconhecidos.
                 
         else:
+            """
+            Início dos ataques. As variáveis de controle "turno_capitao", "turno_monstro" e "vez" são utilizadas e atualizadas para a tomada de 
+            decisão de quais animações de cada indivíduo na tela serão executadas, através das seguintes condições.
+            """
             capitao.animacao.atualizar()
             monstro.animacao.atualizar()
             turno_anterior = turno
+            
             # Capitão bate
             if turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                """
+                A lista de frames do Capitão será a de ataque até que ela chegue ao final, isto é, até que a animação de ataque Capitão 
+                chegue ao fim uma vez. Após isso, o Capitão recebe novamente a lista de frames de idle, enquanto o monstro recebe sua lista de 
+                frames de receber dano.
+                """
                 monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
                 monstro.estado, capitao.estado = 0, estado_luta
                 
@@ -257,6 +281,10 @@ while executando:
             
             # Monstro apanha       
             elif not turno_monstro and (not vez) and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                """
+                Analogamente, é executada a animação de receber dano do monstro. Ao final da mesma, o monstro recebe sua lista de frames de 
+                ataque.
+                """
                 monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
                 monstro.estado, capitao.estado = 2, 0
                 
@@ -268,6 +296,10 @@ while executando:
             
             # Monstro bate       
             elif turno_monstro and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                """
+                É executada a animação de ataque do monstro. Ao final, o monstro recebe sua lista de frames de idle, enquanto o capitão recebe 
+                sua lista de frames de receber dano.
+                """
                 monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
                 monstro.estado, capitao.estado = 1, 0
                 
@@ -280,6 +312,10 @@ while executando:
                 
             # Capitão apanha        
             elif not turno_capitao and capitao.pontos_vida != 0 and monstro.pontos_vida != 0:
+                """
+                É executada a animação de receber dano do Capitão. O final desta animação representa o fim de um "turno" de ataques, visto que 
+                tanto o Capitão quanto o monstro atacaram e sofreram ataques.
+                """
                 monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
                 monstro.estado, capitao.estado = 0, 6
                 
@@ -292,6 +328,9 @@ while executando:
             
             # Capitão morre
             elif capitao.pontos_vida == 0 and monstro.pontos_vida != 0:
+                """
+                Morte do Capitão em batalha.
+                """
                 monstro_estado_anterior, capitao_estado_anterior = monstro.estado, capitao.estado
                 monstro.estado, capitao.estado = 0, 7
                 
@@ -308,6 +347,9 @@ while executando:
             
             # Monstro morre
             elif monstro.pontos_vida == 0 and capitao.pontos_vida != 0:
+                """
+                Morte do monstro em batalha.
+                """
                 capitao_estado_anterior, monstro_estado_anterior = capitao.estado, monstro.estado
                 capitao.estado, monstro.estado = 0, 3
                 
@@ -399,7 +441,7 @@ pg.mixer.music.stop()
 pg.quit()
 
 ### Área de comentários e observações
-# Léo: Interface, Personagens, 1/2 main, resto
+# Léo: Interface, Personagens, resto
 # Davi: Animações, Grafo, Utils, Tudo sobre batalhas
 # Ordem: Grafos, Personagem, Animação, Interface, Utils, Main
 

@@ -8,6 +8,14 @@ from personagem import Personagem, Criatura, Arma, PlantaMedicinal
 
 # Grafo
 def inicializa_grafo(grafo, json_path):
+    """
+    Inicia um grafo com vértices e arestas definidos a partir de um arquivo JSON, o qual representa o conjunto de coordenadas de pontos 
+    selecionados da tela do Pygame (cada ponto é referente à posição um vértice na tela)
+
+    Args:
+        grafo: O grafo a ser inicializado.
+        json_path: O caminho para o arquivo JSON contendo os dados dos vértices.
+    """
     with open(json_path, 'r') as file:
         dados_json = json.load(file)
         
@@ -33,14 +41,20 @@ def inicializa_grafo(grafo, json_path):
     inputGrafo(grafo)
 
 def inputGrafo(grafo):
+    """
+    Define eventos e objetos em vértices do grafo, como checkpoints, monstros e itens.
+
+    Args:
+        grafo: O grafo a ser modificado.
+    """
     vertices_possiveis = list(range(1,31))
     grafo.vertices[0].evento[0] = "praia"
     grafo.vertices[31].evento[0] = "tesouro"
     n = 6
     
     lista_monstros = inicializa_criaturas(grafo)
-    lista_armas = inicializa_armas(grafo)
-    lista_remedios = inicializa_remedios(grafo)
+    lista_armas = inicializa_armas()
+    lista_remedios = inicializa_remedios()
     lista_perigosa = ["Areia movediça", "Floresta dos sussuros", "Vulcão", "Poço de cobras", "Chuva de cocô dos pombos do Norte", "Pântano do Zé Jacaré"]
     
     num_checkpoints = sample(vertices_possiveis, 3)
@@ -87,6 +101,18 @@ def inputGrafo(grafo):
 
 # De Animações
 def carregar_frames(path_img, num_frames, espelhar=False, vertical=False):
+    """
+    Carrega e retorna uma lista de frames de uma imagem.
+
+    Args:
+        path_img: O caminho para a imagem.
+        num_frames: O número de frames na imagem.
+        espelhar: Uma flag indicando se a imagem deve ser espelhada horizontalmente.
+        vertical: Uma flag indicando se a imagem deve ser dividida verticalmente.
+
+    Returns:
+        Uma lista de frames da imagem.
+    """
     frames = pg.image.load(path_img)
     if vertical:
         largura_frame = frames.get_width()
@@ -115,11 +141,31 @@ def carregar_frames(path_img, num_frames, espelhar=False, vertical=False):
     return lista_frames
 
 def calcular_distancia(x_destino, y_destino, x_inicial, y_inicial):
-        difx = x_destino - x_inicial
-        dify = y_destino - y_inicial
-        return (difx**2 + dify**2)**0.5
+    """
+    Calcula a distância entre dois pontos.
+
+    Args:
+        x_destino: A coordenada x do ponto de destino.
+        y_destino: A coordenada y do ponto de destino.
+        x_inicial: A coordenada x do ponto inicial.
+        y_inicial: A coordenada y do ponto inicial.
+
+    Returns:
+        A distância entre os dois pontos.
+    """
+    difx = x_destino - x_inicial
+    dify = y_destino - y_inicial
+    return (difx**2 + dify**2)**0.5
 
 def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
+    """
+    Move um personagem em linha reta em direção a um destino.
+
+    Args:
+        personagem: O personagem a ser movido.
+        destino: As coordenadas (x, y) do destino.
+        num_frames_animacao: O número de frames da animação de movimento.
+    """
     estado_anterior = -1
     if calcular_distancia(destino[0], destino[1], personagem.x, personagem.y) > 8:
         dx = destino[0] - personagem.x
@@ -143,6 +189,15 @@ def mover_em_linha_reta(personagem, destino, num_frames_animacao = 60):
 
 # De personagem
 def inicializa_capitao(grafo):
+    """
+    Inicializa o Capitão Daleo, capitão pirata, famoso explorador de terras e caçador de tesouros, personagem central do jogo.
+
+    Args:
+        grafo: O grafo ao qual o personagem pertence.
+
+    Returns:
+        O objeto do Capitão Daleo.
+    """
     capitao = Personagem(grafo=grafo)
     arma_inicial = Arma("Lâmina do explorador", "Lâmina modesta e forte, aço leve e punho de couro. Boa para novatos.", 20, imagem="images\GUI\Lâmina do Explorador.png", vertice=capitao.vertice)
     capitao.arma_inicial = arma_inicial
@@ -161,6 +216,21 @@ def inicializa_capitao(grafo):
     return capitao
 
 def inicializa_criatura(grafo, sprites, espelhar, descricao,vertical=False, x_luta=0, y_luta=0):
+    """
+    Inicializa uma criatura.
+
+    Args:
+        grafo: O grafo ao qual a criatura pertence.
+        sprites: As informações sobre os sprites da criatura.
+        espelhar: Uma flag indicando se os sprites devem ser espelhados horizontalmente.
+        descricao: A descrição da criatura.
+        vertical: Uma flag indicando se os sprites devem ser divididos verticalmente.
+        x_luta: A coordenada x da posição de luta da criatura.
+        y_luta: A coordenada y da posição de luta da criatura.
+
+    Returns:
+        O objeto da criatura inicializado.
+    """
     monstro = Criatura(grafo,descricao)
     monstro.x_luta, monstro.y_luta = x_luta, y_luta
     monstro_idle = carregar_frames(sprites[0][0], sprites[0][1], espelhar=espelhar, vertical=vertical)
@@ -174,6 +244,15 @@ def inicializa_criatura(grafo, sprites, espelhar, descricao,vertical=False, x_lu
         
 
 def inicializa_criaturas(grafo):
+    """
+    Inicializa as criaturas do jogo através da função "inicializa criatura" deste mesmo pacote.
+
+    Args:
+        grafo: O grafo ao qual as criaturas pertencem.
+
+    Returns:
+        Uma lista contendo as criaturas inicializadas.
+    """
     sprites1 = [("images\monstros\lobo\idle_6frm.png", 6), 
                ("images\monstros\lobo\lobattack_5frm.png", 5), 
                ("images\monstros\lobo\hit_4frm.png", 4), 
@@ -242,7 +321,19 @@ def inicializa_criaturas(grafo):
     monstros = [dona_morte, mr_eucalipto, master_magrelo, hidra_magrela, lagartixolem, barata_militar]
     return monstros
 
-def inicializa_armas(grafo):
+def inicializa_armas():
+    """
+    Inicializa todas as armas do jogo.
+
+    Args:
+        nome: O nome da arma.
+        descricao: A descrição da arma.
+        poder_ataque: O poder de ataque da arma.
+        imagem: O caminho para a imagem da arma.
+
+    Returns:
+        Lista de objetos das armas inicializadas.
+    """
     descricao = "Uma espada lendária que brilha com poder místico. Dizem que corta através do destino dos inimigos."
     arma1 = Arma("Espada do Destino", descricao ,pontos_ataque=30, imagem="images\GUI\Espada do Destino.png")
     
@@ -270,7 +361,19 @@ def inicializa_armas(grafo):
     lista_armas = [arma1, arma2, arma3, arma4, arma5, arma6, arma7, arma8]
     return lista_armas
 
-def inicializa_remedios(grafo):
+def inicializa_remedios():
+    """
+    Inicializa todas as plantas medicinais do jogo.
+
+    Args:
+        nome: O nome da planta medicinal.
+        descricao: A descrição da planta medicinal.
+        cura: A quantidade de vida que a planta medicinal cura.
+        imagem: O caminho para a imagem da planta medicinal.
+
+    Returns:
+        Lista de objetos das plantas medicinais inicializadas.
+    """
     descricao = "Uma folha verde exuberante encontrada apenas nas profundezas da selva da ilha, conhecida por suas propriedades curativas naturais."
     med1 = PlantaMedicinal("Folha de Cura Tropical", descricao, "images\GUI\Folha de Cura Tropical.png", pontos_vida=12)
     
