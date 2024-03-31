@@ -81,7 +81,6 @@ while executando:
 
         sobreMens()
 
-
     # Capitão achou um perigo
     if capitao.em_perigo != None:
         perigo = capitao.em_perigo
@@ -400,4 +399,7 @@ pg.mixer.music.stop()
 pg.quit()
 
 ### Área de comentários e observações
+# Léo: Interface, Personagens, 1/2 main, resto
+# Davi: Animações, Grafo, Utils, Tudo sobre batalhas
+# Ordem: Grafos, Personagem, Animação, Interface, Utils, Main
 
