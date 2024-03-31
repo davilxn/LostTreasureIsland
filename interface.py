@@ -70,7 +70,7 @@ class Tela:
         info = fonte.render('Vida', True,cor_texto)
         pg.draw.rect(self.tela, verde, (local_y, 2*local_x, barra_tam, altura))
         self.tela.blit(info,(local_y,local_x))
-    
+
     def desenhar_ataquepts(self, pts_ataque, local_y, local_x, altura=20, largura=50, cor_fundo=(0, 0, 0), cor_texto=(101, 58, 26)):
         imagem_fundo = pg.image.load("images\GUI\GUI 5.png")
         self.desenhar_elemento(imagem_fundo, (local_y-8,local_x-8))
@@ -92,17 +92,25 @@ class Tela:
         info = fonte2.render(str(usos_restantes), True,cor_texto)
         self.tela.blit(info, (local_y, local_x-10))
 
+    def desenhar_expedicao_tempo(self, expedicao, local_y=530, local_x=25, cor_texto=(101, 58, 26)):
+        imagem_fundo = pg.image.load("images\GUI\GUI 2.png")
+        self.desenhar_elemento(imagem_fundo, (local_y-8,local_x-17))
+        imagem_core = pg.image.load("images\GUI\Expedicao.png")
+        imagem_core_redimensionada = pg.transform.scale(imagem_core, (25, 25))
+        self.desenhar_elemento(imagem_core_redimensionada,(local_y,local_x))
+        fonte2 = pg.font.Font(None, 20)
+        info = fonte2.render(str(expedicao), True,cor_texto)
+        self.tela.blit(info, (local_y, local_x-10))
 
     def desenhar_tesouro(self, por_tesouro, local_y=670, local_x=25, cor_texto=(101, 58, 26)):
         imagem_fundo = pg.image.load("images\GUI\GUI 2.png")
         self.desenhar_elemento(imagem_fundo, (local_y-8,local_x-17))
         imagem_core = pg.image.load("images\GUI\Bau do Tesouro.png")
-        self.desenhar_elemento(imagem_core,(local_y,local_x))
+        imagem_core_redimensionada = pg.transform.scale(imagem_core, (25, 25))
+        self.desenhar_elemento(imagem_core_redimensionada,(local_y,local_x))
         fonte2 = pg.font.Font(None, 20)
         info = fonte2.render(str(por_tesouro), True,cor_texto)
         self.tela.blit(info, (local_y, local_x-10))
-
-
 
     def desenhar_coracao(self, num_core, local_y=750, local_x=20):
         imagem_fundo = pg.image.load("images\GUI\GUI 4.png")

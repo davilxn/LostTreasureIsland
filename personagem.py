@@ -126,6 +126,7 @@ class Personagem:
         # Referentes ao Capitão
         self.pontos_vida = pontos_vida
         self.menor_vida = 100
+        self.expedicao = 0
         self.pontos_vida_maximos = pontos_vida
         self.vidas_restantes = 3
         self.tesouro = 0
@@ -149,6 +150,7 @@ class Personagem:
     
     def mover(self):
         self.ind_caminho += 1
+        self.expedicao += 1
         self.vertice = self.caminho[self.ind_caminho]
         self.arma.vertice = self.vertice
         
@@ -328,11 +330,17 @@ class Personagem:
         
         if self.vertice == 0 and self.caminho[-1] == 0:
             if self.tesouro:
-                self.em_termino_exploracao = "Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha."
-                print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha.")
+                if self.expedicao <= 48:
+                    self.em_termino_exploracao = "Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha."
+                    print("Você conseguiu. Conquistou o grande tesouro tão desejado por todos os aventureiros. Boa viagem de volta pra casa, e jamais cometa a estupidez de retornar a esta ilha.")
+                else:
+                    self.em_termino_exploracao = "Você conseguiu. Entretanto, demorou demais. O Barco Zarpou sem você, a morte na ilha lhe espera!"  
             else:
-                self.em_termino_exploracao = "Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne."
-                print("Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne.")
+                if self.expedicao <= 48:
+                    self.em_termino_exploracao = "Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne."
+                    print("Você foi ao inferno e, embora não tenha conseguido o tesouro, sobreviveu. Agradeça aos céus, volte pra casa somente com as histórias, e jamais retorne.")
+                else:
+                    self.em_termino_exploracao = "Você foi ao inferno e voltou. Entretnto, demorou demais. O Barco Zarpou sem você, a morte na ilha lhe espera!"
         
         self.estado_atual()
         
