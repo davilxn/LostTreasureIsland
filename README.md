@@ -21,6 +21,22 @@ pip install pygame
 4. Jogue: Após feito todo o processo com exito, basta executar o arquivo *main.py*.
 
 <p align="center">
+  <img src="/images/apresentação/Regras.png" alt="Regras">
+</p>
+
+<p align="center">
   <img src="/images/apresentação/Como Jogar.png" width="400" alt="Como jogar">
   <img src="/images/apresentação/O Que Não Se Deve Fazer.png" width="400" alt="O que não se deve fazer">
+</p>
+
+<p align="center">
+  <img src="/images/apresentação/Preview.png" alt="Preview">
+</p>
+
+<p align="center">
+  <img src="/images/apresentação/Tela Mapa.png" alt="Tela do Mapa">
+</p>
+
+<p align="center">
+  <img src="/images/apresentação/Tela Luta.png" alt="Tela de luta">
 </p>
