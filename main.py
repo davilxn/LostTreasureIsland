@@ -59,7 +59,12 @@ while executando:
                 capitao.desequipar_arma()
                 print("Você desequipou sua arma atual.")
     
+    # Capitão achou o tesouro
     if capitao.encontrou_tesouro:
+        """
+        Captao achou o tesouro e agora deve voltar para a praia. 
+        Será exibido a seguinte mensagem e recalculado o caminho para se chegar a praia.
+        """
         mensagem = f"Parabéns, você encontrou o tesouro! Poderá desfrutar da sua conquista, mas antes, volte para o navio."
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Bau do Tesouro.png"),(80,80)), (210,420))
@@ -70,7 +75,11 @@ while executando:
 
         sobreMens()
 
+    #capitão achou um checkpoint
     if capitao.em_checkpoint:
+        """
+        Capitão chegou a um checkpoint, caso ele morra ele volta para este ponto com seus valores armazenados.
+        """
         mensagem = "Você alcançou um checkpoint. Descanse, aprecie a vista e prepare-se."
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\Sombra e Água Fresca.png"),(80,80)), (210,420))
@@ -83,6 +92,10 @@ while executando:
 
     # Capitão achou um perigo
     if capitao.em_perigo != None:
+        """
+        Capitão achou um perigo da ilha. A depender de qual seja há uma mensagem personalizada e
+        o valor de vida perdido é uma aleaorio indo de 1 a 10.
+        """
         perigo = capitao.em_perigo
         mensagem = ''
         if perigo == "Areia movediça":
@@ -110,7 +123,12 @@ while executando:
 
         sobreMens()
 
+    #Capitão conseguiu voltar para a praia
     if capitao.em_termino_exploracao != None:
+        """
+        Capitão conseguiu cumprir a expedição
+        """
+
         mensagem = capitao.em_termino_exploracao
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\jogo termina.png"),(80,80)), (210,420))
@@ -121,7 +139,12 @@ while executando:
 
         capitao.fim_de_jogo()
 
+    #capitão morreu
     if capitao.em_morte:
+        """
+        Capitão morreu, a mensagem aparece e caso ele tenha checkpoint volta para lá.
+        """
+
         mensagem = f"Você morreu. Tente novamente, aventureiro."
         tela_principal.exibir_mensagem(mensagem, (200, 350))
         tela_principal.desenhar_elemento(pg.transform.scale(pg.image.load("images\GUI\jogo termina.png"),(80,80)), (210,420))
@@ -132,7 +155,11 @@ while executando:
 
         sobreMens()
 
+    #capitão achou uma arma
     if capitao.arma_nova:
+        """
+        Capitão encontrou uma arma nova pelo vertice que passou, agora ele tem a escolha se armazena-la ou não.
+        """
         arma = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, Arma)]
         mensagem = f"Que sorte! Você encontrou: {arma[0].nome}. {arma[0].descricao}. Deseja trocar de arma ou manter a arma atual?"
         tela_principal.exibir_mensagem(mensagem, (200, 350))
@@ -153,8 +180,12 @@ while executando:
         
         sobreMens()
 
-
+    # Capitão achou uma planta medicinal
     if capitao.planta:
+        """
+        Capitão encontrou uma planta medicinal, o mesmo procedimento para os outros campos, será printado uma mensagem
+        e a imagem da dada planta. Caso ele não tenha 100 de vida, ele recebe automaticamente os pontos de vida que ela dá.
+        """
         planta = [obj for obj in capitao.grafo.vertices[capitao.vertice].objeto if isinstance(obj, PlantaMedicinal)]
         mensagem = f"Que sorte! Você encontrou: {planta[0].nome}.\n{planta[0].descricao}"
         if capitao.pontos_vida < 100:
@@ -174,7 +205,6 @@ while executando:
         
         sobreMens()
         
-          
     if capitao.em_batalha and not batalha:
         """
         Se o capitão chega a um vértice que possui monstro, séra perguntado se ele deseja fugir ou lutar. Caso deseje lutar, será criada
