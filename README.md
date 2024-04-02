@@ -33,9 +33,13 @@ pip install pygame
   <img src="/images/apresentação/Preview.png" alt="Preview">
 </p>
 
+## Tela do Mapa
+
 <p align="center">
   <img src="/images/apresentação/Tela Mapa.png" alt="Tela do Mapa">
 </p>
+
+## Tela de Luta
 
 <p align="center">
   <img src="/images/apresentação/Tela Luta.png" alt="Tela de luta">
