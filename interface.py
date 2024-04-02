@@ -1,5 +1,6 @@
 import pygame as pg
 
+#classe tela
 class Tela:
     def __init__(self, largura, altura, titulo):
         pg.init()
@@ -9,14 +10,17 @@ class Tela:
         pg.display.set_caption(titulo)
         self.imagem_fundo = None 
 
+    #coloca uma imagem de fundo na tela criada
     def definir_imagem_fundo(self, caminho_imagem):
         imagem = pg.image.load(caminho_imagem)
         imagem_redimensionada = pg.transform.scale(imagem, (self.largura, self.altura))
         self.imagem_fundo = imagem_redimensionada
 
+    #metodo para desenhar imagens
     def desenhar_elemento(self, imagem, posicao):
         self.tela.blit(imagem, posicao)
 
+    #metodo para exibiçaõ de mensagem
     def exibir_mensagem(self, mensagem, posicao, tamanho_fonte=30, cor=(101, 58, 26), largura_maxima=800, red=False):
         if red==True:
             tamanho_fonte = 23
@@ -55,6 +59,7 @@ class Tela:
             
             self.tela.blit(texto_renderizado, (pos_x, pos_y))
     
+    #metodo para desenhar botoes que serão para interação
     def desenhar_botao(self, texto, posicao, tamanho=(150, 50), cor_fundo=(228,166,114), cor_texto=(101, 58, 26)):
         pg.draw.rect(self.tela, cor_fundo, (posicao[0] + 60, posicao[1] + 80, tamanho[0], tamanho[1]))
         fonte = pg.font.Font(None, 30)
